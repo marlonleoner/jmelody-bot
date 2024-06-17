@@ -25,19 +25,18 @@ public abstract class AbstractCommand {
         this(name, description, new ArrayList<>());
     }
 
-    protected AbstractCommand(String name, String description, List<OptionData> options) {
+    private AbstractCommand(String name, String description, List<OptionData> options) {
         this.name = name;
         this.description = description;
         this.options = options;
     }
 
     public boolean hasOptions() {
-        return Objects.nonNull(options) && !options.isEmpty();
-    }
-
-    protected void addOption(OptionData option) {
-        this.options.add(option);
+        List<OptionData> optionsData = this.getOptions();
+        return Objects.nonNull(optionsData) && !optionsData.isEmpty();
     }
 
     public abstract void handle(SlashCommandInteractionEvent event) throws CommandException;
+
+    public abstract List<OptionData> getOptions();
 }

@@ -10,6 +10,10 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+
+import java.util.List;
 
 public class PlayCommand extends AbstractCommand {
 
@@ -25,6 +29,14 @@ public class PlayCommand extends AbstractCommand {
             request.setMessage(message);
             PlayerManager.getInstance().play(request);
         });
+    }
+
+    @Override
+    public List<OptionData> getOptions() {
+        return List.of(
+                new OptionData(OptionType.STRING, "song", "Name or URL of track to play", true),
+                new OptionData(OptionType.STRING, "source", "Platform to search song", false)
+        );
     }
 
     private RequestPlay createRequest(SlashCommandInteractionEvent event) throws CommandException {
