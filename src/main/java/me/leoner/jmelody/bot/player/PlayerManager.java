@@ -13,12 +13,16 @@ import me.leoner.jmelody.bot.JMelody;
 import me.leoner.jmelody.bot.modal.RequestPlay;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class PlayerManager {
+
+    private static final Logger logger = LoggerFactory.getLogger(PlayerManager.class);
 
     private static PlayerManager playerManager;
 
@@ -73,12 +77,12 @@ public class PlayerManager {
 
             @Override
             public void noMatches() {
-                System.out.println("noMatches");
+                logger.info("noMatches");
             }
 
             @Override
             public void loadFailed(FriendlyException exception) {
-                System.out.println("loadFailed");
+                logger.error("noMatches: {}", exception.getMessage());
             }
         });
     }

@@ -11,14 +11,14 @@ import net.dv8tion.jda.api.managers.AudioManager;
 
 public class JMelody {
 
-    private static JDA jmelody;
+    private static JDA bot;
 
     private JMelody() {
         // empty constructor
     }
 
     public static void run() {
-        jmelody = JDABuilder.createDefault(System.getProperty("DISCORD_TOKEN"))
+        bot = JDABuilder.createDefault(System.getProperty("DISCORD_TOKEN"))
                 .setActivity(Activity.listening("some music"))
                 .addEventListeners(new CommandManager())
                 .build();
@@ -31,6 +31,6 @@ public class JMelody {
     }
 
     public static JDA getInstance() {
-        return jmelody;
+        return bot;
     }
 }

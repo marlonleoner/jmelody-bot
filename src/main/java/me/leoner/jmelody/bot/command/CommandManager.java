@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class CommandManager extends ListenerAdapter {
-    private final static Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
 
     private final List<AbstractCommand> commands;
 

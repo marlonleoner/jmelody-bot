@@ -6,7 +6,11 @@ import org.slf4j.LoggerFactory;
 
 public class DotenvConfig {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(DotenvConfig.class);
+    private static final Logger logger = LoggerFactory.getLogger(DotenvConfig.class);
+
+    private DotenvConfig() {
+        // empty constructor
+    }
 
     public static void run() {
         Dotenv dotenv = Dotenv.configure()
@@ -14,7 +18,7 @@ public class DotenvConfig {
                 .load();
 
         dotenv.entries().forEach(e -> {
-            LOGGER.info("Setting property {}={}", e.getKey(), e.getValue());
+            logger.info("Setting property {}={}", e.getKey(), e.getValue());
             System.setProperty(e.getKey(), e.getValue());
         });
     }

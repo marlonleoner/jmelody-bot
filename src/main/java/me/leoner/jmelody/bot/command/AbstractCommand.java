@@ -13,7 +13,7 @@ import java.util.Objects;
 @Getter
 public abstract class AbstractCommand {
 
-    protected final Logger LOGGER = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final String name;
 
@@ -21,17 +21,17 @@ public abstract class AbstractCommand {
 
     private final List<OptionData> options;
 
-    public AbstractCommand(String name, String description) {
+    protected AbstractCommand(String name, String description) {
         this(name, description, new ArrayList<>());
     }
 
-    public AbstractCommand(String name, String description, List<OptionData> options) {
+    protected AbstractCommand(String name, String description, List<OptionData> options) {
         this.name = name;
         this.description = description;
         this.options = options;
     }
 
-    public Boolean hasOptions() {
+    public boolean hasOptions() {
         return Objects.nonNull(options) && !options.isEmpty();
     }
 

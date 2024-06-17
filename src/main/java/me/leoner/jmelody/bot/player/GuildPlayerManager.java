@@ -15,7 +15,7 @@ import java.util.List;
 
 public class GuildPlayerManager extends AudioEventAdapter {
 
-    protected final Logger LOGGER = LoggerFactory.getLogger(GuildPlayerManager.class);
+    protected final Logger logger = LoggerFactory.getLogger(GuildPlayerManager.class);
 
     private final AudioPlayer player;
 
@@ -46,12 +46,12 @@ public class GuildPlayerManager extends AudioEventAdapter {
 
     @Override
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
-        LOGGER.error("An error occurred when starting the track {}: {}", track.getInfo().title, exception.getMessage());
+        logger.error("An error occurred when starting the track {}: {}", track.getInfo().title, exception.getMessage());
     }
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
-        LOGGER.debug("Playing track {}", track.getInfo().title);
+        logger.debug("Playing track {}", track.getInfo().title);
     }
 
     @Override
