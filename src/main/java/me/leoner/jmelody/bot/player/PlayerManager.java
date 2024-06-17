@@ -56,6 +56,14 @@ public class PlayerManager {
         this.getPlayerManager(event.getGuild()).stop();
     }
 
+    public void prev(Guild guild) {
+        this.getPlayerManager(guild).prev();
+    }
+
+    public void next(Guild guild) {
+        this.getPlayerManager(guild).next();
+    }
+
     public static PlayerManager getInstance() {
         if (Objects.isNull(playerManager)) {
             playerManager = new PlayerManager();

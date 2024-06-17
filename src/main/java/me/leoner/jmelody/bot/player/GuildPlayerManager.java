@@ -44,6 +44,14 @@ public class GuildPlayerManager extends AudioEventAdapter {
         this.tracks.clear();
     }
 
+    public void prev() {
+        // TODO: how to get the previous track?
+    }
+
+    public void next() {
+        this.nextTrack();
+    }
+
     @Override
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
         logger.error("An error occurred when starting the track {}: {}", track.getInfo().title, exception.getMessage());
