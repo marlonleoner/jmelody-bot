@@ -9,12 +9,16 @@ import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.managers.AudioManager;
 
-public class Bot {
+public class JMelody {
 
-    private static JDA bot;
+    private static JDA jmelody;
+
+    private JMelody() {
+        // empty constructor
+    }
 
     public static void run() {
-        bot = JDABuilder.createDefault(System.getProperty("DISCORD_TOKEN"))
+        jmelody = JDABuilder.createDefault(System.getProperty("DISCORD_TOKEN"))
                 .setActivity(Activity.listening("some music"))
                 .addEventListeners(new CommandManager())
                 .build();
@@ -27,6 +31,6 @@ public class Bot {
     }
 
     public static JDA getInstance() {
-        return bot;
+        return jmelody;
     }
 }

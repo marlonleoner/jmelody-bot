@@ -5,6 +5,6 @@ import me.leoner.jmelody.bot.config.DotenvConfig;
 public class Main {
     public static void main(String[] args) {
         DotenvConfig.run();
-        Bot.run();
+        JMelody.run();
     }
 }
