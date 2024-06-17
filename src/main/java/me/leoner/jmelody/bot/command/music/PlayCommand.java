@@ -23,8 +23,8 @@ public class PlayCommand extends AbstractCommand {
         RequestPlay request = this.createRequest(event);
 
         event.deferReply().queue(message -> {
+            request.setMessage(message);
             PlayerManager.getInstance().play(request);
-            message.editOriginalEmbeds(EmbedGenerator.withMessage("Song added")).queue();
         });
     }
 

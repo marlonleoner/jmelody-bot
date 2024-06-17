@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,6 +21,8 @@ public class RequestPlay {
     private MessageChannelUnion textChannel;
 
     private AudioChannelUnion voiceChannel;
+
+    private InteractionHook message;
 
     private Member member;
 

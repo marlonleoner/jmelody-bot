@@ -1,16 +1,12 @@
 package me.leoner.jmelody.bot.player;
 
 import com.github.topi314.lavasrc.spotify.SpotifySourceManager;
-import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
-import me.leoner.jmelody.bot.JMelody;
 import me.leoner.jmelody.bot.modal.RequestPlay;
+import me.leoner.jmelody.bot.player.handler.PlayAudioHandler;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.slf4j.Logger;
@@ -57,34 +53,7 @@ public class PlayerManager {
 
     public void play(RequestPlay request) {
         final GuildPlayerManager guildManager = this.getPlayerManager(request.getGuild());
-
-        this.manager.loadItemOrdered(manager, request.getSong(), new AudioLoadResultHandler() {
-            @Override
-            public void trackLoaded(AudioTrack track) {
-                guildManager.queue(track);
-
-                JMelody.startPlayer(request.getGuild(), request.getMember());
-            }
-
-            @Override
-            public void playlistLoaded(AudioPlaylist playlist) {
-                for (AudioTrack track : playlist.getTracks()) {
-                    guildManager.queue(track);
-                }
-
-                JMelody.startPlayer(request.getGuild(), request.getMember());
-            }
-
-            @Override
-            public void noMatches() {
-                logger.info("noMatches");
-            }
-
-            @Override
-            public void loadFailed(FriendlyException exception) {
-                logger.error("noMatches: {}", exception.getMessage());
-            }
-        });
+        this.manager.loadItemOrdered(guildManager, request.getSong(), new PlayAudioHandler(request, guildManager));
     }
 
     public void stop(SlashCommandInteractionEvent event) {
