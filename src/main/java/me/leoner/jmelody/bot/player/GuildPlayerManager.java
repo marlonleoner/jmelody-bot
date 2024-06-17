@@ -7,6 +7,8 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import lombok.Getter;
+import me.leoner.jmelody.bot.modal.RequestPlay;
+import me.leoner.jmelody.bot.service.NowPlayingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,6 +62,8 @@ public class GuildPlayerManager extends AudioEventAdapter {
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
         logger.debug("Playing track {}", track.getInfo().title);
+        RequestPlay request = (RequestPlay) track.getUserData();
+        NowPlayingService.update(request, track);
     }
 
     @Override

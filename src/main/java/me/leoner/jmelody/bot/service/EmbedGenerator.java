@@ -49,23 +49,29 @@ public class EmbedGenerator {
     public static MessageEmbed withTrackAdded(AudioTrack track, Member member) {
         AudioTrackInfo infos = track.getInfo();
 
-        EmbedBuilder embed = EmbedGenerator.createBase(true);
-
-        embed.addField("Track Queued", "`#1` • [`" + infos.title + "`](" + infos.uri + ")", true);
-        embed.addField("Request by", member.getAsMention(), true);
-        embed.addField("Duration", "`" + EmbedGenerator.formatDuration(infos.length) + "`", true);
+        EmbedBuilder embed = EmbedGenerator.createBase(false);
+        embed.setDescription("✅ | " + member.getAsMention() + " **added [`" + infos.title + "`](" + infos.uri + ") to the queue**");
 
         return embed.build();
     }
 
     public static MessageEmbed withPlaylistAdded(AudioPlaylist playlist, Member member) {
-        EmbedBuilder embed = EmbedGenerator.createBase(true);
-
-        embed.addField("Playlist Queued", "`" + playlist.getName() + "`", true);
-        embed.addField("Request by", member.getAsMention(), true);
-        embed.addField("Total Tracks", "`" + playlist.getTracks().size() + " song(s)`", true);
+        EmbedBuilder embed = EmbedGenerator.createBase(false);
+        embed.setDescription("✅ | " + member.getAsMention() + " **added `" + playlist.getName() + " (" + playlist.getTracks().size() + "songs)` to the queue**");
 
         return embed.build();
     }
 
+    public static MessageEmbed withNowPlaying(AudioTrack track, Member member) {
+        AudioTrackInfo infos = track.getInfo();
+
+        EmbedBuilder embed = EmbedGenerator.createBase(true);
+        embed.setAuthor("Now Playing", null, System.getProperty("NOW_PLAYING_ICON"));
+        embed.addField("Track", "[`" + infos.title + "`](" + infos.uri + ")", true);
+        embed.addField("Request by", member.getAsMention(), true);
+        embed.addField("Duration", "`" + EmbedGenerator.formatDuration(infos.length) + "`", true);
+        embed.setImage(System.getProperty("NOW_PLAYING_IMAGE"));
+
+        return embed.build();
+    }
 }
