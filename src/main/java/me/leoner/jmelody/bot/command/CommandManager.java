@@ -57,6 +57,6 @@ public class CommandManager extends ListenerAdapter {
     }
 
     private void replyException(SlashCommandInteractionEvent event, String message, Boolean ephemeral) {
-        event.replyEmbeds(EmbedGenerator.withErrorMessage(message)).setEphemeral(ephemeral).queue();
+        event.replyEmbeds(EmbedGenerator.withErrorMessage(event.getMember().getAsMention() + " " + message)).setEphemeral(ephemeral).queue();
     }
 }

@@ -43,7 +43,7 @@ public class EmbedGenerator {
     }
 
     public static MessageEmbed withErrorMessage(String message) {
-        return EmbedGenerator.withMessage(":cross: " + message);
+        return EmbedGenerator.withMessage("❎ | " + message);
     }
 
     public static MessageEmbed withTrackAdded(AudioTrack track, Member member) {

@@ -7,6 +7,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import lombok.Getter;
+import me.leoner.jmelody.bot.command.CommandException;
 import me.leoner.jmelody.bot.modal.RequestPlay;
 import me.leoner.jmelody.bot.service.NowPlayingService;
 import org.slf4j.Logger;
@@ -50,7 +51,7 @@ public class GuildPlayerManager extends AudioEventAdapter {
         // TODO: how to get the previous track?
     }
 
-    public void next() {
+    public void next() throws CommandException {
         this.nextTrack();
     }
 
@@ -68,15 +69,19 @@ public class GuildPlayerManager extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        if (endReason.mayStartNext) {
-            nextTrack();
+        try {
+            if (endReason.mayStartNext) {
+                nextTrack();
+            }
+        } catch (Exception ex) {
+            logger.error("An error occurred onTrackEnd {}: {}", track.getInfo().title, ex.getMessage());
         }
     }
 
-    private void nextTrack() {
+    private void nextTrack() throws CommandException {
         if (tracks.isEmpty()) {
             this.player.stopTrack();
-            return;
+            throw new CommandException("nothing is playing here", true);
         }
 
         AudioTrack next = tracks.remove(0);

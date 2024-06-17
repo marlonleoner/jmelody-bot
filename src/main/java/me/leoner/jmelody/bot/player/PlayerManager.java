@@ -5,6 +5,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
+import me.leoner.jmelody.bot.command.CommandException;
 import me.leoner.jmelody.bot.modal.RequestPlay;
 import me.leoner.jmelody.bot.player.handler.PlayAudioHandler;
 import net.dv8tion.jda.api.entities.Guild;
@@ -60,7 +61,7 @@ public class PlayerManager {
         this.getPlayerManager(guild).prev();
     }
 
-    public void next(Guild guild) {
+    public void next(Guild guild) throws CommandException {
         this.getPlayerManager(guild).next();
     }
 
