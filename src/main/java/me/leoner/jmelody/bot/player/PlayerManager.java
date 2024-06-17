@@ -9,16 +9,12 @@ import me.leoner.jmelody.bot.modal.RequestPlay;
 import me.leoner.jmelody.bot.player.handler.PlayAudioHandler;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class PlayerManager {
-
-    private static final Logger logger = LoggerFactory.getLogger(PlayerManager.class);
 
     private static PlayerManager playerManager;
 
