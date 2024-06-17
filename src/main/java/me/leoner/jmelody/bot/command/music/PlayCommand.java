@@ -2,6 +2,7 @@ package me.leoner.jmelody.bot.command.music;
 
 import me.leoner.jmelody.bot.command.AbstractCommand;
 import me.leoner.jmelody.bot.command.CommandException;
+import me.leoner.jmelody.bot.service.EmbedGenerator;
 import me.leoner.jmelody.bot.modal.RequestPlay;
 import me.leoner.jmelody.bot.player.PlayerManager;
 import me.leoner.jmelody.bot.utils.EventUtils;
@@ -23,7 +24,7 @@ public class PlayCommand extends AbstractCommand {
 
         event.deferReply().queue(message -> {
             PlayerManager.getInstance().play(request);
-            message.editOriginal("Song loaded!").queue();
+            message.editOriginalEmbeds(EmbedGenerator.withMessage("Song added")).queue();
         });
     }
 

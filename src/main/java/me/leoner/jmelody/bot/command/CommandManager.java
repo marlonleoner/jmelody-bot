@@ -1,5 +1,6 @@
 package me.leoner.jmelody.bot.command;
 
+import me.leoner.jmelody.bot.service.EmbedGenerator;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
@@ -56,6 +57,6 @@ public class CommandManager extends ListenerAdapter {
     }
 
     private void replyException(SlashCommandInteractionEvent event, String message, Boolean ephemeral) {
-        event.reply(message).setEphemeral(ephemeral).queue();
+        event.replyEmbeds(EmbedGenerator.withErrorMessage(message)).setEphemeral(ephemeral).queue();
     }
 }
