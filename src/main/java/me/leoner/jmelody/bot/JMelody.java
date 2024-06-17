@@ -1,9 +1,6 @@
 package me.leoner.jmelody.bot;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import me.leoner.jmelody.bot.command.CommandManager;
-import me.leoner.jmelody.bot.modal.RequestPlay;
-import me.leoner.jmelody.bot.service.EmbedGenerator;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
