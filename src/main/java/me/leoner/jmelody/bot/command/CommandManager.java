@@ -50,6 +50,8 @@ public class CommandManager extends ListenerAdapter {
             commandOptional.get().handle(event);
         } catch (CommandException ex) {
             this.replyException(event, ex.getMessage(), ex.getEphemeral());
+        } catch (Exception ex) {
+            this.replyException(event, "Hey, something went wrong: " + ex.getMessage(), true);
         }
     }
 
