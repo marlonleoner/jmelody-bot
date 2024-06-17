@@ -4,6 +4,10 @@ import me.leoner.jmelody.bot.command.CommandManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.GuildVoiceState;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.managers.AudioManager;
 
 public class Bot {
 
@@ -14,6 +18,12 @@ public class Bot {
                 .setActivity(Activity.listening("some music"))
                 .addEventListeners(new CommandManager())
                 .build();
+    }
+
+    public static void startPlayer(Guild guild, Member user) {
+        GuildVoiceState voiceState = user.getVoiceState();
+        AudioManager audioManager = guild.getAudioManager();
+        audioManager.openAudioConnection(voiceState.getChannel());
     }
 
     public static JDA getInstance() {
