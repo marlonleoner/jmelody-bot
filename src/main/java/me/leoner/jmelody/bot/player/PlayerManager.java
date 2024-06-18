@@ -53,6 +53,10 @@ public class PlayerManager {
         this.manager.loadItemOrdered(guildManager, request.getSong(), new PlayAudioHandler(request, guildManager));
     }
 
+    public boolean pause(Guild guild) {
+        return this.getPlayerManager(guild).pause();
+    }
+
     public void stop(SlashCommandInteractionEvent event) {
         this.getPlayerManager(event.getGuild()).stop();
     }
@@ -63,6 +67,14 @@ public class PlayerManager {
 
     public void next(Guild guild) throws CommandException {
         this.getPlayerManager(guild).next();
+    }
+
+    public Integer getVolume(Guild guild) {
+        return this.getPlayerManager(guild).getVolume();
+    }
+
+    public void setVolume(Guild guild, Integer volume) {
+        this.getPlayerManager(guild).setVolume(volume);
     }
 
     public static PlayerManager getInstance() {

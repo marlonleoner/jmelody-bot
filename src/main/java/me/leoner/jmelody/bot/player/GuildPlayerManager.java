@@ -42,6 +42,7 @@ public class GuildPlayerManager extends AudioEventAdapter {
         if (!this.player.startTrack(track, true)) {
             this.tracks.add(track);
         }
+        this.player.setPaused(false);
     }
 
     public void stop() {
@@ -55,6 +56,20 @@ public class GuildPlayerManager extends AudioEventAdapter {
 
     public void next() throws CommandException {
         this.nextTrack();
+    }
+
+    public boolean pause() {
+        boolean state = !this.player.isPaused();
+        this.player.setPaused(state);
+        return state;
+    }
+
+    public Integer getVolume() {
+        return this.player.getVolume();
+    }
+
+    public void setVolume(Integer volume) {
+        this.player.setVolume(volume);
     }
 
     @Override
@@ -88,5 +103,6 @@ public class GuildPlayerManager extends AudioEventAdapter {
 
         AudioTrack next = tracks.remove(0);
         this.player.startTrack(next, false);
+        this.player.setPaused(false);
     }
 }
