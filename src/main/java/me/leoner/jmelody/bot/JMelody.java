@@ -2,7 +2,6 @@ package me.leoner.jmelody.bot;
 
 import me.leoner.jmelody.bot.command.CommandManager;
 import me.leoner.jmelody.bot.config.DotenvConfig;
-import me.leoner.jmelody.bot.config.RedisClient;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
