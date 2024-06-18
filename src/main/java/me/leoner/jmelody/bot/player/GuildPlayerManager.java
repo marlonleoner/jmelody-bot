@@ -28,9 +28,11 @@ public class GuildPlayerManager extends AudioEventAdapter {
     @Getter
     private final List<AudioTrack> tracks;
 
+    private final NowPlayingService nowPlayingService = new NowPlayingService();
+
     public GuildPlayerManager(AudioPlayerManager manager) {
         this.player = manager.createPlayer();
-        this.player.setVolume(10);
+        this.player.setVolume(25);
         this.player.addListener(this);
         this.handler = new AudioHandler(this.player);
         this.tracks = new LinkedList<>();
@@ -64,7 +66,7 @@ public class GuildPlayerManager extends AudioEventAdapter {
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
         logger.debug("Playing track {}", track.getInfo().title);
         RequestPlay request = (RequestPlay) track.getUserData();
-        NowPlayingService.update(request, track);
+        nowPlayingService.update(request, track);
     }
 
     @Override

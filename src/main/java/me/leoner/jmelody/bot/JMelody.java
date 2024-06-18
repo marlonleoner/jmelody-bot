@@ -1,6 +1,8 @@
 package me.leoner.jmelody.bot;
 
 import me.leoner.jmelody.bot.command.CommandManager;
+import me.leoner.jmelody.bot.config.DotenvConfig;
+import me.leoner.jmelody.bot.config.RedisClient;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -18,10 +20,16 @@ public class JMelody {
     }
 
     public static void run() {
+        JMelody.config();
+
         bot = JDABuilder.createDefault(System.getProperty("DISCORD_TOKEN"))
                 .setActivity(Activity.listening("some music"))
                 .addEventListeners(new CommandManager())
                 .build();
+    }
+
+    private static void config() {
+        DotenvConfig.run();
     }
 
     public static void startPlayer(Guild guild, Member user) {

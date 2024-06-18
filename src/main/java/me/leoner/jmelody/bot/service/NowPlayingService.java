@@ -1,51 +1,55 @@
 package me.leoner.jmelody.bot.service;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import kotlin.Pair;
 import me.leoner.jmelody.bot.JMelody;
+import me.leoner.jmelody.bot.command.ButtonInteractionEnum;
+import me.leoner.jmelody.bot.config.RedisClient;
 import me.leoner.jmelody.bot.modal.RequestPlay;
-import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Objects;
 
 public class NowPlayingService {
 
-    private static NowPlayingService instance;
-
-    private final Map<String, Pair<String, String>> messages;
+    private final RedisClient redis;
 
     public NowPlayingService() {
-        this.messages = new HashMap<>();
+        redis = RedisClient.getClient();
     }
 
-    public static void update(RequestPlay request, AudioTrack track) {
+    public void update(RequestPlay request, AudioTrack track) {
         request.getTextChannel()
                 .sendMessageEmbeds(EmbedGenerator.withNowPlaying(track, request.getMember()))
-                .queue(message -> {
-                    NowPlayingService instance = getInstance();
-                    instance.remove(request.getGuild());
-                    instance.add(request.getGuild(), request.getTextChannel().getId(), message.getId());
-                });
+                .addActionRow(getActions())
+                .queue(message -> updateMessages(request.getGuild().getId(), request.getTextChannel().getId(), message.getId()));
     }
 
-    private void add(Guild guild, String channelId, String messageId) {
-        this.messages.put(guild.getId(), new Pair<>(channelId, messageId));
+    private void updateMessages(String guildId, String channelId, String messageId) {
+        String baseKey = "NOW_PLAYING:".concat(guildId);
+        removeOldMessage(baseKey);
+        String value = channelId.concat(":").concat(messageId);
+        updateValue(baseKey, value);
     }
 
-    private void remove(Guild guild) {
-        Pair<String, String> channelMessage = messages.get(guild.getId());
-        if (Objects.isNull(channelMessage)) return;
+    private void removeOldMessage(String baseKey) {
+        String channelMessage = redis.get(baseKey, String.class);
+        if (Objects.isNull(channelMessage) || channelMessage.isEmpty()) return;
 
-        JMelody.removeMessageFromChannel(channelMessage.getFirst(), channelMessage.getSecond());
+        String[] data = channelMessage.split(":");
+        JMelody.removeMessageFromChannel(data[0], data[1]);
     }
 
-    private static NowPlayingService getInstance() {
-        if (Objects.isNull(instance)) {
-            instance = new NowPlayingService();
-        }
+    private void updateValue(String baseKey, String value) {
+        redis.set(baseKey, value);
+    }
 
-        return instance;
+    private List<Button> getActions() {
+        List<ButtonInteractionEnum> buttons = ButtonInteractionEnum.getAllByPrefix("now-playing");
+
+        return buttons.stream()
+                .map(button -> Button.secondary(button.getButtonId(), Emoji.fromFormatted(button.getEmote())))
+                .toList();
     }
 }
