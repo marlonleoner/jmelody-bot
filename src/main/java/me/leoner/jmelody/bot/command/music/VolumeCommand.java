@@ -18,6 +18,8 @@ import java.util.Objects;
 
 public class VolumeCommand extends AbstractCommand {
 
+    private static final Integer DELTA_VOLUME = 5;
+
     public VolumeCommand(String name, String description) {
         super(name, description);
     }
@@ -54,8 +56,8 @@ public class VolumeCommand extends AbstractCommand {
     private Integer getVolumeFromButton(NowPlayingButtonInteractionEnum button, Integer currentVolume) {
         return switch (button) {
             case NP_MUTED -> 0;
-            case NP_VOLUME_UP -> Math.min(currentVolume + 10, 100);
-            case NP_VOLUME_DOWN -> Math.max(currentVolume - 10, 0);
+            case NP_VOLUME_UP -> Math.min(currentVolume + DELTA_VOLUME, 100);
+            case NP_VOLUME_DOWN -> Math.max(currentVolume - DELTA_VOLUME, 0);
             default -> currentVolume;
         };
     }
