@@ -4,12 +4,16 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import java.util.Objects;
 
 public class RedisClient {
+
+    private static final Logger logger = LoggerFactory.getLogger(RedisClient.class);
 
     private static RedisClient client;
 
@@ -22,14 +26,16 @@ public class RedisClient {
         this.mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         this.mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
-        this.jedis = new JedisPool(System.getProperty("REDIS_HOST"), Integer.parseInt(System.getProperty("REDIS_PORT"))).getResource();
+        try (JedisPool pool = new JedisPool(System.getProperty("REDIS_HOST"), Integer.parseInt(System.getProperty("REDIS_PORT")))) {
+            this.jedis = pool.getResource();
+        }
     }
 
     public void set(String key, Object value) {
         try {
             this.jedis.set(key, mapper.writeValueAsString(value));
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.warn("Error setting value to redis: {}", ex.getMessage());
         }
     }
 

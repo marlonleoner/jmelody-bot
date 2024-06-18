@@ -15,7 +15,6 @@ import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 public class VolumeCommand extends AbstractCommand {
 
@@ -64,15 +63,14 @@ public class VolumeCommand extends AbstractCommand {
     private void view(ReplyCallbackAction action, Guild guild) {
         action.queue(message -> {
             Integer currentVolume = PlayerManager.getInstance().getVolume(guild);
-            message.editOriginalEmbeds(EmbedGenerator.withMessage("The player volume is at `" + currentVolume + "%`")).queue();
+            replyEmbed(message, EmbedGenerator.withMessage("The player volume is at `" + currentVolume + "%`"), true);
         });
     }
 
     private void change(ReplyCallbackAction action, Guild guild, Member user, Integer volume) {
         action.queue(message -> {
             PlayerManager.getInstance().setVolume(guild, volume);
-            message.editOriginalEmbeds(EmbedGenerator.withMessage(user.getAsMention() + " set the player volume to `" + volume + "%`")).queue();
-            message.deleteOriginal().queueAfter(10, TimeUnit.SECONDS);
+            replyEmbed(message, EmbedGenerator.withMessage(user.getAsMention() + " set the player volume to `" + volume + "%`"), true);
         });
     }
 }

@@ -1,8 +1,10 @@
 package me.leoner.jmelody.bot.command;
 
 import lombok.Getter;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Getter
 public abstract class AbstractCommand {
@@ -35,6 +38,11 @@ public abstract class AbstractCommand {
     public boolean hasOptions() {
         List<OptionData> optionsData = this.getOptions();
         return Objects.nonNull(optionsData) && !optionsData.isEmpty();
+    }
+
+    protected void replyEmbed(InteractionHook message, MessageEmbed embed, boolean autoDelete) {
+        message.editOriginalEmbeds(embed).queue();
+        if (autoDelete) message.deleteOriginal().queueAfter(10, TimeUnit.SECONDS);
     }
 
     public abstract List<OptionData> getOptions();

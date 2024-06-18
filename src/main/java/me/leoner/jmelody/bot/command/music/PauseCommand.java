@@ -38,7 +38,7 @@ public class PauseCommand extends AbstractCommand {
     private void execute(ReplyCallbackAction action, Guild guild, Member member) {
         action.queue(message -> {
             String state = PlayerManager.getInstance().pause(guild) ? "paused" : "resumed";
-            message.editOriginalEmbeds(EmbedGenerator.withMessage(member.getAsMention() + " **" + state + "** the player")).queue();
+            replyEmbed(message, EmbedGenerator.withMessage(member.getAsMention() + " **" + state + "** the player"), true);
         });
     }
 }
