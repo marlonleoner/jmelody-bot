@@ -2,7 +2,7 @@ package me.leoner.jmelody.bot.service;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import me.leoner.jmelody.bot.JMelody;
-import me.leoner.jmelody.bot.command.ButtonInteractionEnum;
+import me.leoner.jmelody.bot.command.NowPlayingButtonInteractionEnum;
 import me.leoner.jmelody.bot.config.RedisClient;
 import me.leoner.jmelody.bot.modal.RequestPlay;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -22,7 +22,8 @@ public class NowPlayingService {
     public void update(RequestPlay request, AudioTrack track) {
         request.getTextChannel()
                 .sendMessageEmbeds(EmbedGenerator.withNowPlaying(track, request.getMember()))
-                .addActionRow(getActions())
+                .addActionRow(getActions(1))
+                .addActionRow(getActions(2))
                 .queue(message -> updateMessages(request.getGuild().getId(), request.getTextChannel().getId(), message.getId()));
     }
 
@@ -45,11 +46,11 @@ public class NowPlayingService {
         redis.set(baseKey, value);
     }
 
-    private List<Button> getActions() {
-        List<ButtonInteractionEnum> buttons = ButtonInteractionEnum.getAllByPrefix("now-playing");
+    private List<Button> getActions(Integer line) {
+        List<NowPlayingButtonInteractionEnum> buttons = NowPlayingButtonInteractionEnum.getByLine(line);
 
         return buttons.stream()
-                .map(button -> Button.secondary(button.getButtonId(), Emoji.fromFormatted(button.getEmote())))
+                .map(button -> Button.secondary(button.getName(), Emoji.fromFormatted(button.getEmote())))
                 .toList();
     }
 }

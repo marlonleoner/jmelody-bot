@@ -2,11 +2,13 @@ package me.leoner.jmelody.bot.command;
 
 import me.leoner.jmelody.bot.service.EmbedGenerator;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,55 +41,61 @@ public class CommandManager extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        Optional<AbstractCommand> commandOptional = this.commands
-                .stream()
-                .filter(command -> command.getName().equals(event.getName()))
-                .findFirst();
-
-        if (commandOptional.isEmpty()) {
-            this.replyException(event, "Command `/" + event.getName() + "` not found", true);
-            return;
-        }
-
         try {
-            commandOptional.get().handle(event);
+            AbstractCommand command = this.getCommandByName(event.getName());
+            command.handle(event);
         } catch (CommandException ex) {
-            this.replyException(event, ex.getMessage(), ex.getEphemeral());
+            this.replyException(event.deferReply(), event.getMember(), ex.getMessage(), ex.getEphemeral());
         } catch (Exception ex) {
-            this.replyException(event, "Hey, something went wrong: " + ex.getMessage(), true);
+            this.replyException(event.deferReply(), event.getMember(), "Hey, something went wrong: " + ex.getMessage(), true);
         }
     }
 
     @Override
-    public void onButtonInteraction(ButtonInteractionEvent event) {
-        ButtonInteractionEnum button = ButtonInteractionEnum.getByButtonId(event.getButton().getId());
-        if (Objects.isNull(button)) {
-            System.out.println("Button not found");
-            return;
+    public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
+        try {
+            String buttonId = event.getButton().getId();
+            NowPlayingButtonInteractionEnum button = NowPlayingButtonInteractionEnum.getByButtonId(buttonId);
+            if (Objects.isNull(button)) {
+                throw new CommandException("Button " + buttonId + " not found", true);
+            }
+
+            AbstractCommand command = this.getCommandByType(button);
+            command.handleButton(event);
+        } catch (CommandException ex) {
+            this.replyException(event.deferReply(), event.getMember(), ex.getMessage(), ex.getEphemeral());
+        } catch (Exception ex) {
+            this.replyException(event.deferReply(), event.getMember(), "Hey, something went wrong: " + ex.getMessage(), true);
+        }
+    }
+
+    private AbstractCommand getCommandByName(String commandName) throws CommandException {
+        Optional<AbstractCommand> commandOptional = this.commands
+                .stream()
+                .filter(command -> command.getName().equals(commandName))
+                .findFirst();
+
+        if (commandOptional.isEmpty()) {
+            throw new CommandException("Command `/" + commandName + "` not found", true);
         }
 
+        return commandOptional.get();
+    }
+
+    private AbstractCommand getCommandByType(NowPlayingButtonInteractionEnum button) throws CommandException {
         Optional<AbstractCommand> commandOptional = this.commands
                 .stream()
                 .filter(command -> command.getClass().equals(button.getCommandType()))
                 .findFirst();
 
         if (commandOptional.isEmpty()) {
-            System.out.println("Command not found");
-            return;
+            throw new CommandException("Command /" + button.getName() + " not found", true);
         }
 
-        try {
-            commandOptional.get().handleButton(event);
-        } catch (CommandException ex) {
-            System.out.println("CommandException: " + ex.getMessage());
-//            this.replyException(event, ex.getMessage(), ex.getEphemeral());
-        } catch (Exception ex) {
-            System.out.println("Hey, something went wrong: " + ex.getMessage());
-//            this.replyException(event, "Hey, something went wrong: " + ex.getMessage(), true);
-        }
+        return commandOptional.get();
     }
 
-    private void replyException(SlashCommandInteractionEvent event, String message, Boolean ephemeral) {
-        event.replyEmbeds(EmbedGenerator.withErrorMessage(event.getMember().getAsMention() + " " + message)).setEphemeral(ephemeral).queue();
+    private void replyException(ReplyCallbackAction action, Member member, String message, Boolean ephemeral) {
+        action.queue(m -> m.setEphemeral(ephemeral).editOriginalEmbeds(EmbedGenerator.withErrorMessage(member.getAsMention() + " " + message)).queue());
     }
 }
