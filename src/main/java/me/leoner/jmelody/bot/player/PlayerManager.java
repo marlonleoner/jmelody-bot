@@ -6,6 +6,7 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import me.leoner.jmelody.bot.command.CommandException;
+import me.leoner.jmelody.bot.config.RedisClient;
 import me.leoner.jmelody.bot.modal.RequestPlay;
 import me.leoner.jmelody.bot.player.handler.PlayAudioHandler;
 import net.dv8tion.jda.api.entities.Guild;
@@ -22,6 +23,8 @@ public class PlayerManager {
     private final AudioPlayerManager manager;
 
     private final Map<String, GuildPlayerManager> guilds = new HashMap<>();
+
+    private final RedisClient redis = RedisClient.getClient();
 
     public PlayerManager() {
         this.manager = new DefaultAudioPlayerManager();
@@ -40,10 +43,24 @@ public class PlayerManager {
         String guildId = guild.getId();
         GuildPlayerManager guildPlayerManager = guilds.get(guildId);
         if (Objects.isNull(guildPlayerManager)) {
-            guildPlayerManager = new GuildPlayerManager(this.manager);
+            guildPlayerManager = createGuildManager(guildId);
             guilds.put(guildId, guildPlayerManager);
             guild.getAudioManager().setSendingHandler(guildPlayerManager.getHandler());
         }
+
+        return guildPlayerManager;
+    }
+
+    private GuildPlayerManager createGuildManager(String guildId) {
+        String key = "VOLUME:" + guildId;
+        Integer currentVolume = redis.get(key, Integer.class);
+        if (Objects.isNull(currentVolume)) {
+            currentVolume = 50;
+            redis.set(key, currentVolume);
+        }
+
+        GuildPlayerManager guildPlayerManager = new GuildPlayerManager(this.manager);
+        guildPlayerManager.setVolume(currentVolume);
 
         return guildPlayerManager;
     }
@@ -75,6 +92,7 @@ public class PlayerManager {
 
     public void setVolume(Guild guild, Integer volume) {
         this.getPlayerManager(guild).setVolume(volume);
+        redis.set("VOLUME:" + guild.getId(), volume);
     }
 
     public static PlayerManager getInstance() {
