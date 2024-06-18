@@ -11,7 +11,7 @@ import java.time.Instant;
 
 public class EmbedGenerator {
 
-    private static final int COLOR = 0xd4e300;
+    private static final int COLOR = 0xb375ff;
 
     private EmbedGenerator() {
         // empty constructor

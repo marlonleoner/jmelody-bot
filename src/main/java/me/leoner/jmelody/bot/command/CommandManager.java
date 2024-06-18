@@ -3,6 +3,7 @@ package me.leoner.jmelody.bot.command;
 import me.leoner.jmelody.bot.service.EmbedGenerator;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class CommandManager extends ListenerAdapter {
@@ -53,6 +55,35 @@ public class CommandManager extends ListenerAdapter {
             this.replyException(event, ex.getMessage(), ex.getEphemeral());
         } catch (Exception ex) {
             this.replyException(event, "Hey, something went wrong: " + ex.getMessage(), true);
+        }
+    }
+
+    @Override
+    public void onButtonInteraction(ButtonInteractionEvent event) {
+        ButtonInteractionEnum button = ButtonInteractionEnum.getByButtonId(event.getButton().getId());
+        if (Objects.isNull(button)) {
+            System.out.println("Button not found");
+            return;
+        }
+
+        Optional<AbstractCommand> commandOptional = this.commands
+                .stream()
+                .filter(command -> command.getClass().equals(button.getCommandType()))
+                .findFirst();
+
+        if (commandOptional.isEmpty()) {
+            System.out.println("Command not found");
+            return;
+        }
+
+        try {
+            commandOptional.get().handleButton(event);
+        } catch (CommandException ex) {
+            System.out.println("CommandException: " + ex.getMessage());
+//            this.replyException(event, ex.getMessage(), ex.getEphemeral());
+        } catch (Exception ex) {
+            System.out.println("Hey, something went wrong: " + ex.getMessage());
+//            this.replyException(event, "Hey, something went wrong: " + ex.getMessage(), true);
         }
     }
 

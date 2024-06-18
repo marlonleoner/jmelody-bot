@@ -5,6 +5,7 @@ import me.leoner.jmelody.bot.command.CommandException;
 import me.leoner.jmelody.bot.player.PlayerManager;
 import me.leoner.jmelody.bot.service.EmbedGenerator;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.Collections;
@@ -20,6 +21,11 @@ public class NextCommand extends AbstractCommand {
     public void handle(SlashCommandInteractionEvent event) throws CommandException {
         PlayerManager.getInstance().next(event.getGuild());
         event.replyEmbeds(EmbedGenerator.withMessage(event.getMember().getAsMention() + " **skipped** to the next track")).queue();
+    }
+
+    @Override
+    public void handleButton(ButtonInteractionEvent event) throws CommandException {
+        PlayerManager.getInstance().next(event.getGuild());
     }
 
     @Override

@@ -2,6 +2,7 @@ package me.leoner.jmelody.bot.command;
 
 import lombok.Getter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,11 @@ public abstract class AbstractCommand {
         return Objects.nonNull(optionsData) && !optionsData.isEmpty();
     }
 
+    public abstract List<OptionData> getOptions();
+
     public abstract void handle(SlashCommandInteractionEvent event) throws CommandException;
 
-    public abstract List<OptionData> getOptions();
+    public void handleButton(ButtonInteractionEvent event) throws CommandException {
+        // empty method
+    }
 }
