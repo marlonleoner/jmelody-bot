@@ -1,6 +1,6 @@
 package me.leoner.jmelody.bot.utils;
 
-import me.leoner.jmelody.bot.command.CommandException;
+import me.leoner.jmelody.bot.modal.exception.CommandException;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;

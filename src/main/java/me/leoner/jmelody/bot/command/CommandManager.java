@@ -1,5 +1,6 @@
 package me.leoner.jmelody.bot.command;
 
+import me.leoner.jmelody.bot.modal.exception.CommandException;
 import me.leoner.jmelody.bot.service.EmbedGenerator;
 import me.leoner.jmelody.bot.service.LoggerService;
 import net.dv8tion.jda.api.entities.Guild;

@@ -1,4 +1,4 @@
-package me.leoner.jmelody.bot.command;
+package me.leoner.jmelody.bot.modal.exception;
 
 import lombok.Getter;
 

@@ -1,6 +1,8 @@
 package me.leoner.jmelody.bot.command;
 
 import lombok.Getter;
+import me.leoner.jmelody.bot.modal.exception.CommandException;
+import me.leoner.jmelody.bot.modal.exception.TrackException;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
