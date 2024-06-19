@@ -6,19 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.AccessLevel;
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 public class RedisClient {
-
-    private static final Logger logger = LoggerFactory.getLogger(RedisClient.class);
 
     private static RedisClient client;
 
@@ -37,7 +30,7 @@ public class RedisClient {
         try {
             this.jedis.set(key, mapper.writeValueAsString(value));
         } catch (Exception ex) {
-            logger.warn("Error setting value to redis: {}", ex.getMessage());
+            LoggerService.warn(RedisClient.class, "Error setting value to redis: {}", ex.getMessage());
         }
     }
 
