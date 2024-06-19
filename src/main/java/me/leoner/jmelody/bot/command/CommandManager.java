@@ -1,6 +1,7 @@
 package me.leoner.jmelody.bot.command;
 
 import me.leoner.jmelody.bot.service.EmbedGenerator;
+import me.leoner.jmelody.bot.service.LoggerService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -10,15 +11,12 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 public class CommandManager extends ListenerAdapter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
 
     private final List<AbstractCommand> commands;
 
@@ -29,9 +27,9 @@ public class CommandManager extends ListenerAdapter {
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         for (Guild guild : event.getJDA().getGuilds()) {
-            LOGGER.info("Setting commands on guild '{}'", guild.getName());
+            LoggerService.info(getClass(), "Setting commands on guild '{}'", guild.getName());
             this.commands.forEach(command -> {
-                LOGGER.debug("Setting command '/{}' - {}", command.getName(), command.getDescription());
+                LoggerService.debug(getClass(), "Setting command '/{}' - {}", command.getName(), command.getDescription());
                 CommandCreateAction action = guild.upsertCommand(command.getName(), command.getDescription());
                 if (command.hasOptions()) action = action.addOptions(command.getOptions());
                 action.queue();
@@ -45,8 +43,10 @@ public class CommandManager extends ListenerAdapter {
             AbstractCommand command = this.getCommandByName(event.getName());
             command.handle(event);
         } catch (CommandException ex) {
+            LoggerService.error(getClass(), "onSlashCommandInteraction - CommandException: {}", ex.getMessage());
             this.replyException(event.deferReply(), event.getMember(), ex.getMessage(), ex.getEphemeral());
         } catch (Exception ex) {
+            LoggerService.error(getClass(), "onSlashCommandInteraction- An unknown error ocurred: {}", ex.getMessage());
             this.replyException(event.deferReply(), event.getMember(), "Hey, something went wrong: " + ex.getMessage(), true);
         }
     }
@@ -63,8 +63,10 @@ public class CommandManager extends ListenerAdapter {
             AbstractCommand command = this.getCommandByType(button);
             command.handleButton(event);
         } catch (CommandException ex) {
+            LoggerService.error(getClass(), "onButtonInteraction - CommandException: {}", ex.getMessage());
             this.replyException(event.deferReply(), event.getMember(), ex.getMessage(), ex.getEphemeral());
         } catch (Exception ex) {
+            LoggerService.error(getClass(), "onButtonInteraction - An unknown error ocurred: {}", ex.getMessage());
             this.replyException(event.deferReply(), event.getMember(), "Hey, something went wrong: " + ex.getMessage(), true);
         }
     }
@@ -96,6 +98,6 @@ public class CommandManager extends ListenerAdapter {
     }
 
     private void replyException(ReplyCallbackAction action, Member member, String message, Boolean ephemeral) {
-        action.queue(m -> m.setEphemeral(ephemeral).editOriginalEmbeds(EmbedGenerator.withErrorMessage(member.getAsMention() + " " + message)).queue());
+        action.setEphemeral(ephemeral).addEmbeds(EmbedGenerator.withErrorMessage(member.getAsMention() + " " + message)).queue();
     }
 }

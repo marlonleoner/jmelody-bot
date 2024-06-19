@@ -1,9 +1,11 @@
-package me.leoner.jmelody.bot.config;
+package me.leoner.jmelody.bot.service;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import lombok.AccessLevel;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
@@ -19,16 +21,13 @@ public class RedisClient {
 
     private final ObjectMapper mapper;
 
-    private final Jedis jedis;
+    @Setter(AccessLevel.PRIVATE)
+    private Jedis jedis;
 
     protected RedisClient() {
         this.mapper = new ObjectMapper();
         this.mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         this.mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-
-        try (JedisPool pool = new JedisPool(System.getProperty("REDIS_HOST"), Integer.parseInt(System.getProperty("REDIS_PORT")))) {
-            this.jedis = pool.getResource();
-        }
     }
 
     public void set(String key, Object value) {
@@ -45,6 +44,11 @@ public class RedisClient {
         } catch (Exception ex) {
             return null;
         }
+    }
+
+    public static void load(Jedis jedis) {
+        RedisClient c = getClient();
+        c.setJedis(jedis);
     }
 
     public static RedisClient getClient() {

@@ -5,12 +5,14 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
+import lombok.Getter;
 import me.leoner.jmelody.bot.command.CommandException;
-import me.leoner.jmelody.bot.config.RedisClient;
+import me.leoner.jmelody.bot.config.ApplicationContext;
 import me.leoner.jmelody.bot.modal.RequestPlay;
 import me.leoner.jmelody.bot.player.handler.PlayAudioHandler;
+import me.leoner.jmelody.bot.service.LoggerService;
+import me.leoner.jmelody.bot.service.RedisClient;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,25 +20,33 @@ import java.util.Objects;
 
 public class PlayerManager {
 
-    private static PlayerManager playerManager;
+    @Getter
+    private static final PlayerManager instance = new PlayerManager();
 
-    private final AudioPlayerManager manager;
+    private final AudioPlayerManager audioManager;
 
     private final Map<String, GuildPlayerManager> guilds = new HashMap<>();
 
     private final RedisClient redis = RedisClient.getClient();
 
-    public PlayerManager() {
-        this.manager = new DefaultAudioPlayerManager();
+    private PlayerManager() {
+        ApplicationContext context = ApplicationContext.getContext();
 
-        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager();
-        this.manager.registerSourceManager(youtube);
+        audioManager = new DefaultAudioPlayerManager();
 
-        SpotifySourceManager spotify = new SpotifySourceManager(null, System.getProperty("SPOTIFY_CLIENT_ID"), System.getProperty("SPOTIFY_CLIENT_SECRET"), System.getProperty("SPOTIFY_COUNTRY_CODE"), manager);
-        this.manager.registerSourceManager(spotify);
+        audioManager.registerSourceManager(new YoutubeAudioSourceManager());
+        audioManager.registerSourceManager(new SpotifySourceManager(
+                null,
+                context.getSpotifyClientId(),
+                context.getSpotifyClientSecret(),
+                context.getSpotifyCountryCode(),
+                audioManager
+        ));
 
-        AudioSourceManagers.registerLocalSource(this.manager);
-        AudioSourceManagers.registerRemoteSources(manager, com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager.class);
+        AudioSourceManagers.registerLocalSource(audioManager);
+        AudioSourceManagers.registerRemoteSources(audioManager, com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager.class);
+
+        LoggerService.info(getClass(), "PlayerManager loaded!");
     }
 
     private GuildPlayerManager getPlayerManager(Guild guild) {
@@ -59,47 +69,35 @@ public class PlayerManager {
             redis.set(key, currentVolume);
         }
 
-        GuildPlayerManager guildPlayerManager = new GuildPlayerManager(this.manager);
+        GuildPlayerManager guildPlayerManager = new GuildPlayerManager(audioManager);
         guildPlayerManager.setVolume(currentVolume);
 
         return guildPlayerManager;
     }
 
     public void play(RequestPlay request) {
-        final GuildPlayerManager guildManager = this.getPlayerManager(request.getGuild());
-        this.manager.loadItemOrdered(guildManager, request.getSong(), new PlayAudioHandler(request, guildManager));
+        final GuildPlayerManager guildManager = getPlayerManager(request.getGuild());
+        audioManager.loadItemOrdered(guildManager, request.getSong(), new PlayAudioHandler(request, guildManager));
     }
 
     public boolean pause(Guild guild) {
-        return this.getPlayerManager(guild).pause();
+        return getPlayerManager(guild).pause();
     }
 
-    public void stop(SlashCommandInteractionEvent event) {
-        this.getPlayerManager(event.getGuild()).stop();
-    }
-
-    public void prev(Guild guild) {
-        this.getPlayerManager(guild).prev();
+    public void stop(Guild guild) throws CommandException {
+        getPlayerManager(guild).stop();
     }
 
     public void next(Guild guild) throws CommandException {
-        this.getPlayerManager(guild).next();
+        getPlayerManager(guild).next();
     }
 
     public Integer getVolume(Guild guild) {
-        return this.getPlayerManager(guild).getVolume();
+        return getPlayerManager(guild).getVolume();
     }
 
     public void setVolume(Guild guild, Integer volume) {
-        this.getPlayerManager(guild).setVolume(volume);
+        getPlayerManager(guild).setVolume(volume);
         redis.set("VOLUME:" + guild.getId(), volume);
-    }
-
-    public static PlayerManager getInstance() {
-        if (Objects.isNull(playerManager)) {
-            playerManager = new PlayerManager();
-        }
-
-        return playerManager;
     }
 }
