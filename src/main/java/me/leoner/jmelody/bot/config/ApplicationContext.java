@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Objects;
+import java.util.concurrent.ScheduledExecutorService;
 
 @NoArgsConstructor
 @Data
@@ -26,6 +27,8 @@ public class ApplicationContext {
     private String spotifyClientSecret;
 
     private String spotifyCountryCode;
+
+    private ScheduledExecutorService scheduler;
 
     public static ApplicationContext getContext() {
         if (Objects.isNull(context)) {

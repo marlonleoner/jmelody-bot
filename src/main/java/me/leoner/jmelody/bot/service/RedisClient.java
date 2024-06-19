@@ -11,7 +11,10 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class RedisClient {
 
@@ -44,6 +47,19 @@ public class RedisClient {
         } catch (Exception ex) {
             return null;
         }
+    }
+
+    public <T> List<T> getAll(String key, Class<T> type) {
+        return jedis.keys(key)
+                .stream()
+                .map(k -> get(k, type))
+                .toList();
+    }
+
+    public List<String> getKeys(String key) {
+        return jedis.keys(key)
+                .stream()
+                .toList();
     }
 
     public static void load(Jedis jedis) {

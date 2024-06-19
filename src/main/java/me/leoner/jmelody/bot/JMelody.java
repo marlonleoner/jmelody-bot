@@ -6,6 +6,7 @@ import me.leoner.jmelody.bot.command.CommandManager;
 import me.leoner.jmelody.bot.config.ApplicationContext;
 import me.leoner.jmelody.bot.config.BotConfig;
 import me.leoner.jmelody.bot.config.RedisConfig;
+import me.leoner.jmelody.bot.player.AloneInChannelHandler;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -32,6 +33,7 @@ public class JMelody {
     private static void config() {
         BotConfig.load();
         RedisConfig.load();
+        AloneInChannelHandler.load();
     }
 
     public static void startPlayer(Guild guild, Member user) {

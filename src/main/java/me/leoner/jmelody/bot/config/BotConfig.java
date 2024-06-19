@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.leoner.jmelody.bot.service.LoggerService;
 
+import java.util.concurrent.Executors;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BotConfig {
 
@@ -27,8 +29,8 @@ public class BotConfig {
         context.setSpotifyClientId(config.getString("SPOTIFY_CLIENT_ID"));
         context.setSpotifyClientSecret(config.getString("SPOTIFY_CLIENT_SECRET"));
         context.setSpotifyCountryCode(config.getString("SPOTIFY_COUNTRY_CODE"));
-
-        LoggerService.info(BotConfig.class, "Discord Token: {}", context.getToken());
+        // Scheduler
+        context.setScheduler(Executors.newSingleThreadScheduledExecutor());
 
         LoggerService.info(BotConfig.class, "Properties loaded!");
     }
