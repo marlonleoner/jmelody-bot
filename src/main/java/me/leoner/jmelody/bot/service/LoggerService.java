@@ -1,13 +1,12 @@
 package me.leoner.jmelody.bot.service;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LoggerService {
-
-    private LoggerService() {
-        // empty constructor
-    }
 
     public static void debug(Class<?> context, String format, Object... args) {
         Logger logger = getLogger(context);
