@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import me.leoner.jmelody.bot.command.music.NextCommand;
 import me.leoner.jmelody.bot.command.music.PauseCommand;
-import me.leoner.jmelody.bot.command.music.PrevCommand;
+import me.leoner.jmelody.bot.command.music.StopCommand;
 import me.leoner.jmelody.bot.command.music.VolumeCommand;
 
 import java.util.Arrays;
@@ -15,12 +15,12 @@ import java.util.Optional;
 @Getter
 public enum NowPlayingButtonInteractionEnum {
 
-    NP_PREV("prev-track", "<:djm_next:1252433069600935987>", PrevCommand.class),
-    NP_PAUSE("pause-track", "<:djm_play:1252432761931956315>", PauseCommand.class),
-    NP_NEXT("next-track", "<:djm_next:1252433069600935987>", NextCommand.class),
-    NP_MUTED("mute", "<:djm_muted:1252434332845604945>", VolumeCommand.class),
-    NP_VOLUME_DOWN("volume-down", "<:djm_volume_down:1252434361983303793>", VolumeCommand.class),
-    NP_VOLUME_UP("volume-up", "<:djm_volume_up:1252434285609222225>", VolumeCommand.class),
+    NP_PREV("stop-track", "<:djm_stop:1252671673459671080>", StopCommand.class),
+    NP_PAUSE("pause-track", "<:djm_pause:1252671903605461082>", PauseCommand.class),
+    NP_NEXT("next-track", "<:djm_skip:1252685712210399242>", NextCommand.class),
+    NP_MUTED("mute", "<:djm_muted:1252671812509110374>", VolumeCommand.class),
+    NP_VOLUME_DOWN("volume-down", "<:djm_vol_down:1252671699506434050>", VolumeCommand.class),
+    NP_VOLUME_UP("volume-up", "<:djm_vol_up:1252671753751232533>", VolumeCommand.class),
     ;
 
     private final String name;
