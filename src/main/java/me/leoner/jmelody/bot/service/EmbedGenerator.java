@@ -11,7 +11,7 @@ import java.time.Instant;
 
 public class EmbedGenerator {
 
-    private static final int COLOR = 0x259188;
+    private static final int COLOR = 0x00CED1;
 
     private EmbedGenerator() {
         // empty constructor
@@ -43,21 +43,21 @@ public class EmbedGenerator {
     }
 
     public static MessageEmbed withErrorMessage(String message) {
-        return EmbedGenerator.withMessage("❎ | " + message);
+        return EmbedGenerator.withMessage("`❌` | " + message);
     }
 
     public static MessageEmbed withTrackAdded(AudioTrack track, Member member) {
         AudioTrackInfo infos = track.getInfo();
 
         EmbedBuilder embed = EmbedGenerator.createBase(false);
-        embed.setDescription("✅ | " + member.getAsMention() + " **added [`" + infos.title + "`](" + infos.uri + ") to the queue**");
+        embed.setDescription("`✅` | " + member.getAsMention() + " **added [`" + infos.title + "`](" + infos.uri + ") to the queue**");
 
         return embed.build();
     }
 
     public static MessageEmbed withPlaylistAdded(AudioPlaylist playlist, Member member) {
         EmbedBuilder embed = EmbedGenerator.createBase(false);
-        embed.setDescription("✅ | " + member.getAsMention() + " **added `" + playlist.getName() + " (" + playlist.getTracks().size() + "songs)` to the queue**");
+        embed.setDescription("`✅` | " + member.getAsMention() + " **added `" + playlist.getName() + " (" + playlist.getTracks().size() + "songs)` to the queue**");
 
         return embed.build();
     }
