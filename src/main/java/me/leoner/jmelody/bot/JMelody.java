@@ -7,13 +7,18 @@ import me.leoner.jmelody.bot.config.ApplicationContext;
 import me.leoner.jmelody.bot.config.BotConfig;
 import me.leoner.jmelody.bot.config.RedisConfig;
 import me.leoner.jmelody.bot.player.AloneInChannelHandler;
+import me.leoner.jmelody.bot.service.EmbedGenerator;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.managers.AudioManager;
+
+import java.util.Objects;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JMelody {
@@ -43,7 +48,19 @@ public class JMelody {
     }
 
     public static void removeMessageFromChannel(String channelId, String messageId) {
-        getInstance().getTextChannelById(channelId).deleteMessageById(messageId).queue();
+        TextChannel channel = getInstance().getTextChannelById(channelId);
+        if (Objects.isNull(channel)) return;
+
+        channel.deleteMessageById(messageId).queue();
+    }
+
+    public static void disconnectFromChannel(Guild guild, MessageChannelUnion channel) {
+        ApplicationContext context = ApplicationContext.getContext();
+        context.getScheduler().submit(() -> {
+            if (Objects.nonNull(channel))
+                channel.sendMessageEmbeds(EmbedGenerator.withMessage("All songs have been played! /play more songs to keep the party going!")).queue();
+            guild.getAudioManager().closeAudioConnection();
+        });
     }
 
     public static JDA getInstance() {
