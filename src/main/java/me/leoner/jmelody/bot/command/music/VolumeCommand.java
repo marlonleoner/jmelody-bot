@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public class VolumeCommand extends AbstractCommand {
 
-    private static final Integer DELTA_VOLUME = 5;
+    private static final Integer DELTA_VOLUME = 10;
 
     public VolumeCommand(String name, String description) {
         super(name, description);

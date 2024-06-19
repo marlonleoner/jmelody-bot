@@ -3,7 +3,6 @@ package me.leoner.jmelody.bot.service;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import me.leoner.jmelody.bot.JMelody;
 import me.leoner.jmelody.bot.command.NowPlayingButtonInteractionEnum;
-import me.leoner.jmelody.bot.config.RedisClient;
 import me.leoner.jmelody.bot.modal.RequestPlay;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
