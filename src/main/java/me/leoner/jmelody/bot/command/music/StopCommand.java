@@ -1,7 +1,8 @@
 package me.leoner.jmelody.bot.command.music;
 
 import me.leoner.jmelody.bot.command.AbstractCommand;
-import me.leoner.jmelody.bot.command.CommandException;
+import me.leoner.jmelody.bot.modal.exception.CommandException;
+import me.leoner.jmelody.bot.modal.exception.TrackException;
 import me.leoner.jmelody.bot.player.PlayerManager;
 import me.leoner.jmelody.bot.service.EmbedGenerator;
 import net.dv8tion.jda.api.entities.Guild;
@@ -37,6 +38,6 @@ public class StopCommand extends AbstractCommand {
 
     private void execute(ReplyCallbackAction action, Guild guild, Member member) throws CommandException {
         PlayerManager.getInstance().stop(guild);
-        action.queue(message -> message.editOriginalEmbeds(EmbedGenerator.withMessage(member.getAsMention() + " **stopped** the player")).queue());
+        action.queue(message -> message.editOriginalEmbeds(EmbedGenerator.withMessage(member.getAsMention() + " **stopped** the player and **cleared** the queue to leave the voice channel.")).queue());
     }
 }
