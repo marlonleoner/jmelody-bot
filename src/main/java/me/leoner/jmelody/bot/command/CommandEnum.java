@@ -13,7 +13,6 @@ public enum CommandEnum {
 
     PLAY("play", "Play a track", PlayCommand.class),
     STOP("stop", "Stop the player and clear the queue", StopCommand.class),
-    PREV("prev", "Skip to the next track", PrevCommand.class),
     NEXT("next", "Skip to the previous track", NextCommand.class),
     PAUSE("pause", "Pause the player", PauseCommand.class),
     VOLUME("volume", "Change or view the volume of player", VolumeCommand.class),

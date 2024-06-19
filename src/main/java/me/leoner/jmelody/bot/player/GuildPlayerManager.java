@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class GuildPlayerManager extends AudioEventAdapter {
 
@@ -28,30 +29,35 @@ public class GuildPlayerManager extends AudioEventAdapter {
     @Getter
     private final List<AudioTrack> tracks;
 
+    private AudioTrack currentTrack;
+
     private final NowPlayingService nowPlayingService = new NowPlayingService();
 
     public GuildPlayerManager(AudioPlayerManager manager) {
         this.player = manager.createPlayer();
-        this.player.setVolume(25);
+        this.player.setVolume(50);
         this.player.addListener(this);
         this.handler = new AudioHandler(this.player);
         this.tracks = new LinkedList<>();
+        this.currentTrack = null;
+    }
+
+    private void verifyQueue() throws CommandException {
+        if (tracks.isEmpty() && Objects.isNull(currentTrack))
+            throw new CommandException("nothing is playing here", true);
     }
 
     public void queue(AudioTrack track) {
-        if (!this.player.startTrack(track, true)) {
-            this.tracks.add(track);
-        }
+        if (!this.player.startTrack(track, true)) this.tracks.add(track);
+
         this.player.setPaused(false);
     }
 
-    public void stop() {
+    public void stop() throws CommandException {
+        verifyQueue();
+
         this.player.stopTrack();
         this.tracks.clear();
-    }
-
-    public void prev() {
-        // TODO: how to get the previous track?
     }
 
     public void next() throws CommandException {
@@ -72,9 +78,24 @@ public class GuildPlayerManager extends AudioEventAdapter {
         this.player.setVolume(volume);
     }
 
+    private void nextTrack() throws CommandException {
+        AudioTrack next = getNextTrack();
+        if (Objects.isNull(next) && Objects.isNull(currentTrack))
+            throw new CommandException("nothing to play here", true);
+
+        this.player.startTrack(next, false);
+        this.player.setPaused(false);
+    }
+
+    private AudioTrack getNextTrack() {
+        if (tracks.isEmpty()) return null;
+
+        return tracks.remove(0);
+    }
+
     @Override
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
-        logger.error("An error occurred when starting the track {}: {}", track.getInfo().title, exception.getMessage());
+        logger.error("An error occurred when starting the track: {}", exception.getMessage());
     }
 
     @Override
@@ -82,27 +103,18 @@ public class GuildPlayerManager extends AudioEventAdapter {
         logger.debug("Playing track {}", track.getInfo().title);
         RequestPlay request = (RequestPlay) track.getUserData();
         nowPlayingService.update(request, track);
+        this.currentTrack = track;
     }
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         try {
+            this.currentTrack = null;
             if (endReason.mayStartNext) {
                 nextTrack();
             }
         } catch (Exception ex) {
             logger.error("An error occurred onTrackEnd {}: {}", track.getInfo().title, ex.getMessage());
         }
-    }
-
-    private void nextTrack() throws CommandException {
-        if (tracks.isEmpty()) {
-            this.player.stopTrack();
-            throw new CommandException("nothing is playing here", true);
-        }
-
-        AudioTrack next = tracks.remove(0);
-        this.player.startTrack(next, false);
-        this.player.setPaused(false);
     }
 }
