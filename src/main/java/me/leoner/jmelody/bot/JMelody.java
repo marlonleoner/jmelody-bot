@@ -54,11 +54,9 @@ public class JMelody {
         channel.deleteMessageById(messageId).queue();
     }
 
-    public static void disconnectFromChannel(Guild guild, MessageChannelUnion channel) {
+    public static void disconnectFromChannel(Guild guild) {
         ApplicationContext context = ApplicationContext.getContext();
         context.getScheduler().submit(() -> {
-            if (Objects.nonNull(channel))
-                channel.sendMessageEmbeds(EmbedGenerator.withMessage("All songs have been played! /play more songs to keep the party going!")).queue();
             guild.getAudioManager().closeAudioConnection();
         });
     }

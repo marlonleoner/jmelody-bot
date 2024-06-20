@@ -30,7 +30,7 @@ public class AloneInChannelHandler {
 
             LoggerService.debug(AloneInChannelHandler.class, "Validating guild '{}'", guild.getName());
             if (isAlone(guild)) {
-                JMelody.disconnectFromChannel(guild, null);
+                JMelody.disconnectFromChannel(guild);
                 LoggerService.info(AloneInChannelHandler.class, "Bot is alone on guild '{}'", guild.getName());
             }
         }
