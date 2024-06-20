@@ -7,7 +7,6 @@ import me.leoner.jmelody.bot.config.ApplicationContext;
 import me.leoner.jmelody.bot.config.BotConfig;
 import me.leoner.jmelody.bot.config.RedisConfig;
 import me.leoner.jmelody.bot.player.AloneInChannelHandler;
-import me.leoner.jmelody.bot.service.EmbedGenerator;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -15,7 +14,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 import java.util.Objects;
@@ -56,9 +54,7 @@ public class JMelody {
 
     public static void disconnectFromChannel(Guild guild) {
         ApplicationContext context = ApplicationContext.getContext();
-        context.getScheduler().submit(() -> {
-            guild.getAudioManager().closeAudioConnection();
-        });
+        context.getScheduler().submit(() -> guild.getAudioManager().closeAudioConnection());
     }
 
     public static JDA getInstance() {
