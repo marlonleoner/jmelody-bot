@@ -106,17 +106,17 @@ public class GuildPlayerManager extends AudioEventAdapter {
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         try {
-            LoggerService.info(getClass(), "Track: {} - EndReason: {}", track, endReason);
+            LoggerService.info(getClass(), "Track: {} - EndReason: {} - mayStartNext: {}", track, endReason, endReason.mayStartNext);
             this.currentTrack = null;
             if (!endReason.mayStartNext) {
-                RequestPlay request = (RequestPlay) track.getUserData();
-                JMelody.disconnectFromChannel(request.getGuild());
-                return;
+                throw new CommandException("The next track could not be started");
             }
 
             nextTrack();
         } catch (Exception ex) {
-            LoggerService.error(getClass(), "An error occurred onTrackEnd: {}", ex.getMessage());
+            LoggerService.error(getClass(), "An error occurred onTrackEnd: {} - EndReason: {} - mayStartNext: {}", ex.getMessage(), endReason, endReason.mayStartNext);
+            RequestPlay request = (RequestPlay) track.getUserData();
+            JMelody.disconnectFromChannel(request.getGuild());
         }
     }
 }

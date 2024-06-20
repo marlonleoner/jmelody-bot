@@ -1,5 +1,7 @@
 package me.leoner.jmelody.bot.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import me.leoner.jmelody.bot.modal.exception.CommandException;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
@@ -9,16 +11,13 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 import java.util.Objects;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EventUtils {
-
-    private EventUtils() {
-        // empty constructor
-    }
 
     public static AudioChannelUnion getVoiceChannelFromUser(Member user) throws CommandException {
         GuildVoiceState voiceState = user.getVoiceState();
         if (!voiceState.inAudioChannel()) {
-            throw new CommandException("Você precisa estar em um canal de voz para que isso funcione", false);
+            throw new CommandException("you need to be in a voice channel", true);
         }
 
         return voiceState.getChannel();
