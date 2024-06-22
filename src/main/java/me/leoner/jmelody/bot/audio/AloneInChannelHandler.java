@@ -1,11 +1,11 @@
-package me.leoner.jmelody.bot.player;
+package me.leoner.jmelody.bot.audio;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.leoner.jmelody.bot.JMelody;
 import me.leoner.jmelody.bot.config.ApplicationContext;
 import me.leoner.jmelody.bot.service.LoggerService;
-import me.leoner.jmelody.bot.service.RedisClient;
+import me.leoner.jmelody.bot.service.RedisService;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class AloneInChannelHandler {
     }
 
     private static List<String> getAllGuilds() {
-        RedisClient redis = RedisClient.getClient();
+        RedisService redis = RedisService.getClient();
         return redis.getKeys("NOW_PLAYING:*")
                 .stream()
                 .map(key -> key.split(":")[1])

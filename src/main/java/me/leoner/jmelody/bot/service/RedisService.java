@@ -11,16 +11,16 @@ import redis.clients.jedis.Jedis;
 import java.util.List;
 import java.util.Objects;
 
-public class RedisClient {
+public class RedisService {
 
-    private static RedisClient client;
+    private static RedisService instance;
 
     private final ObjectMapper mapper;
 
     @Setter(AccessLevel.PRIVATE)
     private Jedis jedis;
 
-    protected RedisClient() {
+    protected RedisService() {
         this.mapper = new ObjectMapper();
         this.mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         this.mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
@@ -30,7 +30,7 @@ public class RedisClient {
         try {
             this.jedis.set(key, mapper.writeValueAsString(value));
         } catch (Exception ex) {
-            LoggerService.warn(RedisClient.class, "Error setting value to redis: {}", ex.getMessage());
+            LoggerService.warn(RedisService.class, "Error setting value to redis: {}", ex.getMessage());
         }
     }
 
@@ -56,15 +56,15 @@ public class RedisClient {
     }
 
     public static void load(Jedis jedis) {
-        RedisClient c = getClient();
+        RedisService c = getClient();
         c.setJedis(jedis);
     }
 
-    public static RedisClient getClient() {
-        if (Objects.isNull(client)) {
-            client = new RedisClient();
+    public static RedisService getClient() {
+        if (Objects.isNull(instance)) {
+            instance = new RedisService();
         }
 
-        return client;
+        return instance;
     }
 }

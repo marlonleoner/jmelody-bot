@@ -30,6 +30,10 @@ public class ApplicationContext {
 
     private ScheduledExecutorService scheduler;
 
+    private String nowPlayingIcon;
+
+    private String nowPlayingImage;
+
     public static ApplicationContext getContext() {
         if (Objects.isNull(context)) {
             context = new ApplicationContext();

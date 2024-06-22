@@ -1,21 +1,24 @@
 package me.leoner.jmelody.bot.service;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import me.leoner.jmelody.bot.config.ApplicationContext;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.time.Instant;
 
-public class EmbedGenerator {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class EmbedFactory {
+
+    private static final ApplicationContext applicationContext = ApplicationContext.getContext();
 
     private static final int COLOR = 0x00CED1;
-
-    private EmbedGenerator() {
-        // empty constructor
-    }
+    private static final String BASE_MESSAGE_SUCCESS = "`✅` | ";
+    private static final String BASE_MESSAGE_FAILURE = "`❌` | ";
 
     private static String formatDuration(long duration) {
         long second = (duration / 1000) % 60;
@@ -36,41 +39,29 @@ public class EmbedGenerator {
     }
 
     public static MessageEmbed withMessage(String message) {
-        EmbedBuilder embed = EmbedGenerator.createBase(false);
+        EmbedBuilder embed = EmbedFactory.createBase(false);
         embed.setDescription(message);
 
         return embed.build();
     }
 
     public static MessageEmbed withErrorMessage(String message) {
-        return EmbedGenerator.withMessage("`❌` | " + message);
+        return EmbedFactory.withMessage(BASE_MESSAGE_FAILURE + message);
     }
 
-    public static MessageEmbed withTrackAdded(AudioTrack track, Member member) {
-        AudioTrackInfo infos = track.getInfo();
-
-        EmbedBuilder embed = EmbedGenerator.createBase(false);
-        embed.setDescription("`✅` | " + member.getAsMention() + " **added [`" + infos.title + "`](" + infos.uri + ") to the queue**");
-
-        return embed.build();
-    }
-
-    public static MessageEmbed withPlaylistAdded(AudioPlaylist playlist, Member member) {
-        EmbedBuilder embed = EmbedGenerator.createBase(false);
-        embed.setDescription("`✅` | " + member.getAsMention() + " **added `" + playlist.getName() + " (" + playlist.getTracks().size() + "songs)` to the queue**");
-
-        return embed.build();
+    public static MessageEmbed withSuccessMessage(String message) {
+        return EmbedFactory.withMessage(BASE_MESSAGE_SUCCESS + message);
     }
 
     public static MessageEmbed withNowPlaying(AudioTrack track, Member member) {
         AudioTrackInfo infos = track.getInfo();
 
-        EmbedBuilder embed = EmbedGenerator.createBase(true);
-        embed.setAuthor("Now Playing", null, System.getProperty("NOW_PLAYING_ICON"));
+        EmbedBuilder embed = EmbedFactory.createBase(true);
+        embed.setAuthor("Now Playing", null, applicationContext.getNowPlayingIcon());
         embed.addField("Track", "[`" + infos.title + "`](" + infos.uri + ")", true);
         embed.addField("Request by", member.getAsMention(), true);
-        embed.addField("Duration", "`" + EmbedGenerator.formatDuration(infos.length) + "`", true);
-        embed.setImage(System.getProperty("NOW_PLAYING_IMAGE"));
+        embed.addField("Duration", "`" + EmbedFactory.formatDuration(infos.length) + "`", true);
+        embed.setImage(applicationContext.getNowPlayingImage());
 
         return embed.build();
     }

@@ -1,9 +1,13 @@
 package me.leoner.jmelody.bot.service;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import lombok.AccessLevel;
+import lombok.Getter;
 import me.leoner.jmelody.bot.JMelody;
-import me.leoner.jmelody.bot.command.NowPlayingButtonInteractionEnum;
-import me.leoner.jmelody.bot.modal.RequestPlay;
+import me.leoner.jmelody.bot.button.ButtonInteractionEnum;
+import me.leoner.jmelody.bot.button.CategoryButtonInteractionEnum;
+import me.leoner.jmelody.bot.command.CommandContext;
+import me.leoner.jmelody.bot.modal.TrackRequest;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
@@ -12,18 +16,24 @@ import java.util.Objects;
 
 public class NowPlayingService {
 
-    private final RedisClient redis;
+    @Getter(AccessLevel.PRIVATE)
+    private static final NowPlayingService instance = new NowPlayingService();
 
-    public NowPlayingService() {
-        redis = RedisClient.getClient();
+    private final RedisService redis;
+
+    private NowPlayingService() {
+        redis = RedisService.getClient();
     }
 
-    public void update(RequestPlay request, AudioTrack track) {
-        request.getTextChannel()
-                .sendMessageEmbeds(EmbedGenerator.withNowPlaying(track, request.getMember()))
-                .addActionRow(getActions(1))
-                .addActionRow(getActions(2))
-                .queue(message -> updateMessages(request.getGuild().getId(), request.getTextChannel().getId(), message.getId()));
+    public static void update(AudioTrack track) {
+        NowPlayingService service = getInstance();
+
+        CommandContext context = track.getUserData(CommandContext.class);
+        context.getTextChannel()
+                .sendMessageEmbeds(EmbedFactory.withNowPlaying(track, context.getMember()))
+                .addActionRow(service.getActions(1))
+                .addActionRow(service.getActions(2))
+                .queue(message -> service.updateMessages(context.getGuild().getId(), context.getTextChannel().getId(), message.getId()));
     }
 
     private void updateMessages(String guildId, String channelId, String messageId) {
@@ -46,7 +56,7 @@ public class NowPlayingService {
     }
 
     private List<Button> getActions(Integer line) {
-        List<NowPlayingButtonInteractionEnum> buttons = NowPlayingButtonInteractionEnum.getByLine(line);
+        List<ButtonInteractionEnum> buttons = ButtonInteractionEnum.getByCategoryAndLine(CategoryButtonInteractionEnum.NOW_PLAYING, line);
 
         return buttons.stream()
                 .map(button -> Button.secondary(button.getName(), Emoji.fromFormatted(button.getEmote())))

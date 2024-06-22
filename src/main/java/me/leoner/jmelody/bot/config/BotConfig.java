@@ -31,6 +31,9 @@ public class BotConfig {
         context.setSpotifyCountryCode(config.getString("SPOTIFY_COUNTRY_CODE"));
         // Scheduler
         context.setScheduler(Executors.newSingleThreadScheduledExecutor());
+        // Now Playing
+        context.setNowPlayingIcon(config.getString("NOW_PLAYING_ICON"));
+        context.setNowPlayingImage(config.getString("NOW_PLAYING_IMAGE"));
 
         LoggerService.info(BotConfig.class, "Properties loaded!");
     }

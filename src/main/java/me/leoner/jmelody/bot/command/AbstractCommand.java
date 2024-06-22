@@ -1,52 +1,40 @@
 package me.leoner.jmelody.bot.command;
 
-import lombok.Getter;
-import me.leoner.jmelody.bot.modal.exception.CommandException;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import me.leoner.jmelody.bot.button.ButtonInteractionEnum;
+import me.leoner.jmelody.bot.exception.BaseException;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
-@Getter
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AbstractCommand {
 
-    private final String name;
+    public abstract String getAlias();
 
-    private final String description;
+    public abstract String getName();
 
-    private final List<OptionData> options;
+    public abstract String getDescription();
 
-    protected AbstractCommand(String name, String description) {
-        this(name, description, new ArrayList<>());
-    }
-
-    private AbstractCommand(String name, String description, List<OptionData> options) {
-        this.name = name;
-        this.description = description;
-        this.options = options;
-    }
+    public abstract List<OptionData> getOptions();
 
     public boolean hasOptions() {
         List<OptionData> optionsData = this.getOptions();
         return Objects.nonNull(optionsData) && !optionsData.isEmpty();
     }
 
-    protected void replyEmbed(InteractionHook message, MessageEmbed embed, boolean autoDelete) {
-        message.editOriginalEmbeds(embed).queue();
-        if (autoDelete) message.deleteOriginal().queueAfter(10, TimeUnit.SECONDS);
+    public String handle(CommandContext context) throws BaseException {
+        return handle(context, null);
     }
 
-    public abstract List<OptionData> getOptions();
+    public abstract String handle(CommandContext context, ButtonInteractionEnum button) throws BaseException;
 
-    public abstract void handle(SlashCommandInteractionEvent event) throws CommandException;
-
-    public void handleButton(ButtonInteractionEvent event) throws CommandException {
-        // empty method
+    protected void success(InteractionHook message, MessageEmbed embed) {
+        message.editOriginalEmbeds(embed).queue();
     }
 }
+

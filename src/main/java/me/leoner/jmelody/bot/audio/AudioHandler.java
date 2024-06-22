@@ -1,4 +1,4 @@
-package me.leoner.jmelody.bot.player;
+package me.leoner.jmelody.bot.audio;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.playback.MutableAudioFrame;

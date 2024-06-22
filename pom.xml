@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.leoner.jmelody.bot</groupId>
-    <artifactId>JMelodyBot</artifactId>
-    <version>0.1.0</version>
+    <artifactId>jmelody</artifactId>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -87,6 +87,13 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>5.1.2</version>
+        </dependency>
+
+        <!-- JSoup HTML scrapping -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.17.2</version>
         </dependency>
     </dependencies>
 

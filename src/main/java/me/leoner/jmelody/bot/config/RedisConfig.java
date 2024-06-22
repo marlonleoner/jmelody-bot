@@ -3,7 +3,7 @@ package me.leoner.jmelody.bot.config;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.leoner.jmelody.bot.service.LoggerService;
-import me.leoner.jmelody.bot.service.RedisClient;
+import me.leoner.jmelody.bot.service.RedisService;
 import redis.clients.jedis.JedisPool;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -18,7 +18,7 @@ public class RedisConfig {
                 context.getRedisUsername(),
                 context.getRedisPassword()
         )) {
-            RedisClient.load(pool.getResource());
+            RedisService.load(pool.getResource());
             LoggerService.info(BotConfig.class, "Redis loaded!");
         }
     }

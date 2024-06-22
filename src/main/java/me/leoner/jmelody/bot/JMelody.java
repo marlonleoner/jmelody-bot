@@ -2,11 +2,11 @@ package me.leoner.jmelody.bot;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import me.leoner.jmelody.bot.audio.AloneInChannelHandler;
 import me.leoner.jmelody.bot.command.CommandManager;
 import me.leoner.jmelody.bot.config.ApplicationContext;
 import me.leoner.jmelody.bot.config.BotConfig;
 import me.leoner.jmelody.bot.config.RedisConfig;
-import me.leoner.jmelody.bot.player.AloneInChannelHandler;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -15,6 +15,9 @@ import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.SessionControllerAdapter;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import java.util.Objects;
 
@@ -30,6 +33,16 @@ public class JMelody {
         bot = JDABuilder.createDefault(context.getToken())
                 .setActivity(Activity.listening("some music"))
                 .addEventListeners(new CommandManager())
+
+                .setSessionController(new SessionControllerAdapter())
+                .setBulkDeleteSplittingEnabled(false)
+//                .setMemberCachePolicy(MemberCachePolicy.ALL)
+                .setChunkingFilter(ChunkingFilter.NONE)
+                .disableCache(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS)
+                .setEnableShutdownHook(true)
+                .setAutoReconnect(true)
+                .setContextEnabled(true)
+
                 .build();
     }
 

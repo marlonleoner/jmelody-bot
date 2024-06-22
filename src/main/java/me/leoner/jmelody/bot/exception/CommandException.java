@@ -1,9 +1,9 @@
-package me.leoner.jmelody.bot.modal.exception;
+package me.leoner.jmelody.bot.exception;
 
 import lombok.Getter;
 
 @Getter
-public class CommandException extends Exception {
+public class CommandException extends BaseException {
 
     private final Boolean ephemeral;
 

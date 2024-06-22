@@ -1,15 +1,13 @@
 package me.leoner.jmelody.bot.command.music;
 
+import me.leoner.jmelody.bot.audio.PlayerManager;
+import me.leoner.jmelody.bot.button.ButtonInteractionEnum;
 import me.leoner.jmelody.bot.command.AbstractCommand;
-import me.leoner.jmelody.bot.modal.exception.CommandException;
-import me.leoner.jmelody.bot.modal.RequestPlay;
-import me.leoner.jmelody.bot.player.PlayerManager;
-import me.leoner.jmelody.bot.utils.EventUtils;
-import me.leoner.jmelody.bot.utils.LinkUtils;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import me.leoner.jmelody.bot.command.CommandContext;
+import me.leoner.jmelody.bot.exception.BaseException;
+import me.leoner.jmelody.bot.modal.TrackProvider;
+import me.leoner.jmelody.bot.modal.TrackRequest;
+import me.leoner.jmelody.bot.modal.TrackRequestContext;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
@@ -17,41 +15,40 @@ import java.util.List;
 
 public class PlayCommand extends AbstractCommand {
 
-    public PlayCommand(String name, String description) {
-        super(name, description);
+    private static final String QUERY_PARAM = "query";
+
+    @Override
+    public String getAlias() {
+        return "play";
     }
 
     @Override
-    public void handle(SlashCommandInteractionEvent event) throws CommandException {
-        RequestPlay request = this.createRequest(event);
+    public String getName() {
+        return "Play Music Command";
+    }
 
-        event.deferReply().queue(message -> {
-            request.setMessage(message);
-            PlayerManager.getInstance().play(request);
-        });
+    @Override
+    public String getDescription() {
+        return "Plays the provided song for you.";
+    }
+
+    @Override
+    public String handle(CommandContext context, ButtonInteractionEnum button) throws BaseException {
+        String query = context.getValueParamByKey(QUERY_PARAM);
+        TrackRequest request = new TrackRequest(context, createTrackRequestContext(query));
+        String result = PlayerManager.getDefaultAudioManager().loadAndPlay(request);
+        return "**added " + result + " to queue**";
     }
 
     @Override
     public List<OptionData> getOptions() {
         return List.of(
-                new OptionData(OptionType.STRING, "song", "Name or URL of track to play", true),
+                new OptionData(OptionType.STRING, QUERY_PARAM, "Name or URL of track to play", true),
                 new OptionData(OptionType.STRING, "source", "Platform to search song", false)
         );
     }
 
-    private RequestPlay createRequest(SlashCommandInteractionEvent event) throws CommandException {
-        Guild guild = event.getGuild();
-        Member member = event.getMember();
-        AudioChannelUnion voiceChannel = EventUtils.getVoiceChannelFromUser(member);
-        String song = LinkUtils.getSearchTermOrUrl(EventUtils.getParam(event, "song"));
-
-        RequestPlay request = new RequestPlay();
-        request.setGuild(guild);
-        request.setTextChannel(event.getChannel());
-        request.setVoiceChannel(voiceChannel);
-        request.setMember(member);
-        request.setSong(song);
-
-        return request;
+    private TrackRequestContext createTrackRequestContext(String query) {
+        return new TrackRequestContext(query, TrackProvider.getTrackProvider(query));
     }
 }
