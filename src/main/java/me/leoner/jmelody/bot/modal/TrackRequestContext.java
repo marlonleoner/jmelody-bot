@@ -9,7 +9,7 @@ public class TrackRequestContext {
 
     private String query;
 
-    private TrackProvider provider;
+    private TrackProviderEnum provider;
 
     public String getFullQuery() {
         if (provider.isSearch()) {

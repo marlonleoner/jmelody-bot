@@ -3,12 +3,12 @@ package me.leoner.jmelody.bot.command;
 import me.leoner.jmelody.bot.button.ButtonInteractionEnum;
 import me.leoner.jmelody.bot.exception.BaseException;
 import me.leoner.jmelody.bot.exception.CommandException;
-import me.leoner.jmelody.bot.service.MessageFactory;
 import me.leoner.jmelody.bot.service.LoggerService;
+import me.leoner.jmelody.bot.service.MessageFactory;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -16,7 +16,10 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -29,16 +32,15 @@ public class CommandManager extends ListenerAdapter {
     }
 
     @Override
-    public void onReady(@NotNull ReadyEvent event) {
-        for (Guild guild : event.getJDA().getGuilds()) {
-            LoggerService.info(getClass(), "Setting commands on guild '{}'", guild.getName());
-            this.commands.forEach(command -> {
-                LoggerService.debug(getClass(), "Setting command '/{}' - {}", command.getName(), command.getDescription());
-                CommandCreateAction action = guild.upsertCommand(command.getAlias(), command.getDescription());
-                if (command.hasOptions()) action = action.addOptions(command.getOptions());
-                action.queue();
-            });
-        }
+    public void onGuildReady(GuildReadyEvent event) {
+        Guild guild = event.getGuild();
+        LoggerService.info(getClass(), "Setting commands on guild '{}'", guild.getName());
+        this.commands.forEach(command -> {
+            LoggerService.debug(getClass(), "Setting command '/{}' - {}", command.getName(), command.getDescription());
+            CommandCreateAction action = guild.upsertCommand(command.getAlias(), command.getDescription());
+            if (command.hasOptions()) action = action.addOptions(command.getOptions());
+            action.queue();
+        });
     }
 
     @Override

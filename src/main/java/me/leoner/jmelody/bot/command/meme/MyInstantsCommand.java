@@ -6,7 +6,7 @@ import me.leoner.jmelody.bot.command.AbstractCommand;
 import me.leoner.jmelody.bot.command.CommandContext;
 import me.leoner.jmelody.bot.exception.BaseException;
 import me.leoner.jmelody.bot.modal.MyInstantsItem;
-import me.leoner.jmelody.bot.modal.TrackProvider;
+import me.leoner.jmelody.bot.modal.TrackProviderEnum;
 import me.leoner.jmelody.bot.modal.TrackRequest;
 import me.leoner.jmelody.bot.modal.TrackRequestContext;
 import me.leoner.jmelody.bot.service.MyInstantsService;
@@ -41,7 +41,7 @@ public class MyInstantsCommand extends AbstractCommand {
     @Override
     public String handle(CommandContext context, ButtonInteractionEnum button) throws BaseException {
         MyInstantsItem item = this.service.getRandom();
-        TrackRequest request = new TrackRequest(context, new TrackRequestContext(item.getUrl(), TrackProvider.getTrackProvider(item.getUrl())));
+        TrackRequest request = new TrackRequest(context, new TrackRequestContext(item.getUrl(), TrackProviderEnum.getTrackProvider(item.getUrl())));
         String result = PlayerManager.getDefaultAudioManager().loadAndPlay(request);
         return "**added " + result + " to queue**";
     }

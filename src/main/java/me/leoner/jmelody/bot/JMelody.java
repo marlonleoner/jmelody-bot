@@ -33,16 +33,13 @@ public class JMelody {
         bot = JDABuilder.createDefault(context.getToken())
                 .setActivity(Activity.listening("some music"))
                 .addEventListeners(new CommandManager())
-
                 .setSessionController(new SessionControllerAdapter())
                 .setBulkDeleteSplittingEnabled(false)
-//                .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .setChunkingFilter(ChunkingFilter.NONE)
                 .disableCache(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS)
                 .setEnableShutdownHook(true)
                 .setAutoReconnect(true)
                 .setContextEnabled(true)
-
                 .build();
     }
 

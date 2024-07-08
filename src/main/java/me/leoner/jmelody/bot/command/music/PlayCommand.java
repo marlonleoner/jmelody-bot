@@ -5,7 +5,7 @@ import me.leoner.jmelody.bot.button.ButtonInteractionEnum;
 import me.leoner.jmelody.bot.command.AbstractCommand;
 import me.leoner.jmelody.bot.command.CommandContext;
 import me.leoner.jmelody.bot.exception.BaseException;
-import me.leoner.jmelody.bot.modal.TrackProvider;
+import me.leoner.jmelody.bot.modal.TrackProviderEnum;
 import me.leoner.jmelody.bot.modal.TrackRequest;
 import me.leoner.jmelody.bot.modal.TrackRequestContext;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -16,6 +16,7 @@ import java.util.List;
 public class PlayCommand extends AbstractCommand {
 
     private static final String QUERY_PARAM = "query";
+    private static final String SOURCE_PARAM = "source";
 
     @Override
     public String getAlias() {
@@ -33,22 +34,26 @@ public class PlayCommand extends AbstractCommand {
     }
 
     @Override
+    public List<OptionData> getOptions() {
+        OptionData provider = new OptionData(OptionType.INTEGER, SOURCE_PARAM, "Platform to search song", false);
+        TrackProviderEnum.getActives().forEach(trackProvider -> provider.addChoice(trackProvider.getName(), trackProvider.getId()));
+
+        return List.of(
+                new OptionData(OptionType.STRING, QUERY_PARAM, "Name or URL of track to play", true),
+                provider
+        );
+    }
+
+    @Override
     public String handle(CommandContext context, ButtonInteractionEnum button) throws BaseException {
         String query = context.getValueParamByKey(QUERY_PARAM);
-        TrackRequest request = new TrackRequest(context, createTrackRequestContext(query));
+        Integer provider = context.getValueParamByKey(SOURCE_PARAM);
+        TrackRequest request = new TrackRequest(context, createTrackRequestContext(query, provider));
         String result = PlayerManager.getDefaultAudioManager().loadAndPlay(request);
         return "**added " + result + " to queue**";
     }
 
-    @Override
-    public List<OptionData> getOptions() {
-        return List.of(
-                new OptionData(OptionType.STRING, QUERY_PARAM, "Name or URL of track to play", true),
-                new OptionData(OptionType.STRING, "source", "Platform to search song", false)
-        );
-    }
-
-    private TrackRequestContext createTrackRequestContext(String query) {
-        return new TrackRequestContext(query, TrackProvider.getTrackProvider(query));
+    private TrackRequestContext createTrackRequestContext(String query, Integer provider) {
+        return new TrackRequestContext(query, TrackProviderEnum.getTrackProvider(query, provider));
     }
 }
