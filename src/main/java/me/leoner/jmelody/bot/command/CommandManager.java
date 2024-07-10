@@ -34,7 +34,7 @@ public class CommandManager extends ListenerAdapter {
     @Override
     public void onGuildReady(GuildReadyEvent event) {
         Guild guild = event.getGuild();
-        LoggerService.info(getClass(), "Setting commands on guild '{}'", guild.getName());
+        LoggerService.info(getClass(), "Guild '{}' ready, setting commands...", guild.getName());
         this.commands.forEach(command -> {
             LoggerService.debug(getClass(), "Setting command '/{}' - {}", command.getName(), command.getDescription());
             CommandCreateAction action = guild.upsertCommand(command.getAlias(), command.getDescription());
