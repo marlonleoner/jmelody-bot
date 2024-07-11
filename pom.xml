@@ -18,6 +18,12 @@
 
     <repositories>
         <repository>
+            <id>ll-releases</id>
+            <name>Lavalink Releases</name>
+            <url>https://maven.lavalink.dev/releases</url>
+        </repository>
+
+        <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
@@ -42,11 +48,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.lavalink-devs</groupId>
-            <artifactId>youtube-source</artifactId>
+            <groupId>dev.lavalink.youtube</groupId>
+            <artifactId>common</artifactId>
             <version>1.4.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/youtube-plugin-1.4.0.jar</systemPath>
         </dependency>
 
         <dependency>
