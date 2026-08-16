@@ -9,7 +9,6 @@ RUN mvn clean install
 
 FROM eclipse-temurin:25-jdk
 
-COPY application.properties /app/application.properties
 COPY --from=maven /app/target/*-shaded.jar /app/jmelody.jar
 COPY --from=maven /root/.m2 /root/.m2
 
