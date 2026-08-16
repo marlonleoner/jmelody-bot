@@ -179,4 +179,8 @@ public class PlayerManager {
 
         return null;
     }
+
+    private void disconnectFromVoiceChannel() {
+
+    }
 }

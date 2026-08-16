@@ -5,6 +5,7 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import me.leoner.jmelody.bot.exception.NothingPlayingException;
 import me.leoner.jmelody.bot.manager.GuildPlayerManager;
 import me.leoner.jmelody.bot.service.LoggerService;
 import me.leoner.jmelody.bot.service.NowPlayingService;
@@ -57,13 +58,14 @@ public class TrackManager extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        if (endReason.mayStartNext) {
-            guildManager.nextTrack();
-        } else if (endReason.equals(AudioTrackEndReason.FINISHED) && queue.isEmpty()) {
-            LoggerService.info(getClass(), "Aqui?? {}", endReason);
-//            if (manager.getLastActiveMessage() != null) {
-//                service.submit(() -> handleEndOfQueueWithLastActiveMessage(true));
-//            }
+        LoggerService.info(getClass(), "endReason {} - queue? {} - mayStartNext? {}", endReason, queue.isEmpty(), endReason.mayStartNext);
+
+        try {
+            if (endReason.mayStartNext) {
+                guildManager.next();
+            }
+        } catch (NothingPlayingException ex) {
+
         }
     }
 }

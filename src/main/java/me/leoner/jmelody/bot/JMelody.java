@@ -1,5 +1,6 @@
 package me.leoner.jmelody.bot;
 
+import club.minnced.discord.jdave.interop.JDaveSessionFactory;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.leoner.jmelody.bot.audio.AloneInChannelHandler;
@@ -9,6 +10,7 @@ import me.leoner.jmelody.bot.config.BotConfig;
 import me.leoner.jmelody.bot.config.RedisConfig;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.audio.AudioModuleConfig;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
@@ -31,6 +33,7 @@ public class JMelody {
 
         ApplicationContext context = ApplicationContext.getContext();
         bot = JDABuilder.createDefault(context.getToken())
+                .setAudioModuleConfig(new AudioModuleConfig().withDaveSessionFactory(new JDaveSessionFactory()))
                 .setActivity(Activity.listening("some music"))
                 .addEventListeners(new CommandManager())
                 .setSessionController(new SessionControllerAdapter())

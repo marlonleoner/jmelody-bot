@@ -67,7 +67,7 @@ public class CommandManager extends ListenerAdapter {
         event.deferReply().queue(message -> {
             CommandContext context = createCommandContext(event, message);
             try {
-                String buttonId = event.getButton().getId();
+                String buttonId = event.getButton().getCustomId();
                 ButtonInteractionEnum button = ButtonInteractionEnum.getByButtonId(buttonId);
                 if (Objects.isNull(button)) {
                     throw new CommandException("Button " + buttonId + " not found", true);

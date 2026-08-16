@@ -1,7 +1,5 @@
 package me.leoner.jmelody.bot.config;
 
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.leoner.jmelody.bot.service.LoggerService;
@@ -14,26 +12,23 @@ public class BotConfig {
     public static void load() {
         LoggerService.info(BotConfig.class, "Starting BotConfig...");
 
-        // Loading and updating application context with all properties
-        Config config = ConfigFactory.load();
-
         ApplicationContext context = ApplicationContext.getContext();
         // Discord
-        context.setToken(config.getString("DISCORD_TOKEN"));
+        context.setToken(EnvLoader.get("DISCORD_TOKEN"));
         // Redis
-        context.setRedisHost(config.getString("REDIS_HOST"));
-        context.setRedisPort(config.getInt("REDIS_PORT"));
-        context.setRedisUsername(config.getString("REDIS_USER"));
-        context.setRedisPassword(config.getString("REDIS_PASS"));
+        context.setRedisHost(EnvLoader.get("REDIS_HOST"));
+        context.setRedisPort(Integer.valueOf(EnvLoader.get("REDIS_PORT")));
+        context.setRedisUsername(EnvLoader.get("REDIS_USER"));
+        context.setRedisPassword(EnvLoader.get("REDIS_PASS"));
         // Spotify
-        context.setSpotifyClientId(config.getString("SPOTIFY_CLIENT_ID"));
-        context.setSpotifyClientSecret(config.getString("SPOTIFY_CLIENT_SECRET"));
-        context.setSpotifyCountryCode(config.getString("SPOTIFY_COUNTRY_CODE"));
+        context.setSpotifyClientId(EnvLoader.get("SPOTIFY_CLIENT_ID"));
+        context.setSpotifyClientSecret(EnvLoader.get("SPOTIFY_CLIENT_SECRET"));
+        context.setSpotifyCountryCode(EnvLoader.get("SPOTIFY_COUNTRY_CODE"));
         // Scheduler
         context.setScheduler(Executors.newSingleThreadScheduledExecutor());
         // Now Playing
-        context.setNowPlayingIcon(config.getString("NOW_PLAYING_ICON"));
-        context.setNowPlayingImage(config.getString("NOW_PLAYING_IMAGE"));
+        context.setNowPlayingIcon(EnvLoader.get("NOW_PLAYING_ICON"));
+        context.setNowPlayingImage(EnvLoader.get("NOW_PLAYING_IMAGE"));
 
         LoggerService.info(BotConfig.class, "Properties loaded!");
     }

@@ -7,9 +7,9 @@ import me.leoner.jmelody.bot.JMelody;
 import me.leoner.jmelody.bot.button.ButtonInteractionEnum;
 import me.leoner.jmelody.bot.button.CategoryButtonInteractionEnum;
 import me.leoner.jmelody.bot.command.CommandContext;
-import me.leoner.jmelody.bot.modal.TrackRequest;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
+import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,8 +31,8 @@ public class NowPlayingService {
         CommandContext context = track.getUserData(CommandContext.class);
         context.getTextChannel()
                 .sendMessageEmbeds(EmbedFactory.withNowPlaying(track, context.getMember()))
-                .addActionRow(service.getActions(1))
-                .addActionRow(service.getActions(2))
+                .addComponents(ActionRow.of(service.getActions(1)))
+                .addComponents(ActionRow.of(service.getActions(2)))
                 .queue(message -> service.updateMessages(context.getGuild().getId(), context.getTextChannel().getId(), message.getId()));
     }
 
