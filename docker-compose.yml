@@ -6,8 +6,6 @@ services:
     build:
       context: .
     tty: true
-    environment:
-      - REDIS_HOST=jmelody-host
     links:
       - redis
     depends_on:
