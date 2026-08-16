@@ -72,18 +72,18 @@
         </dependency>
 
         <!-- Linux x86_64 -->
-<!--        <dependency>-->
-<!--            <groupId>club.minnced</groupId>-->
-<!--            <artifactId>jdave-native-linux-x86-64</artifactId>-->
-<!--            <version>0.1.8</version>-->
-<!--        </dependency>-->
-
-        <!-- Windows x86_64 -->
         <dependency>
             <groupId>club.minnced</groupId>
-            <artifactId>jdave-native-win-x86-64</artifactId>
+            <artifactId>jdave-native-linux-x86-64</artifactId>
             <version>0.1.8</version>
         </dependency>
+
+        <!-- Windows x86_64 -->
+<!--        <dependency>-->
+<!--            <groupId>club.minnced</groupId>-->
+<!--            <artifactId>jdave-native-win-x86-64</artifactId>-->
+<!--            <version>0.1.8</version>-->
+<!--        </dependency>-->
 
         <!-- Miscellanious Dependencies -->
         <dependency>
