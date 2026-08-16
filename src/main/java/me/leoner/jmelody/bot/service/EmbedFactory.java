@@ -17,8 +17,8 @@ public class EmbedFactory {
     private static final ApplicationContext applicationContext = ApplicationContext.getContext();
 
     private static final int COLOR = 0x00CED1;
-    private static final String BASE_MESSAGE_SUCCESS = "`✅` | ";
-    private static final String BASE_MESSAGE_FAILURE = "`❌` | ";
+    private static final String BASE_MESSAGE_SUCCESS = "`✅`┆";
+    private static final String BASE_MESSAGE_FAILURE = "`❌`┆";
 
     private static String formatDuration(long duration) {
         long second = (duration / 1000) % 60;

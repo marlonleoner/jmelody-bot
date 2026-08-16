@@ -1,4 +1,4 @@
-FROM maven:3.8.5-openjdk-17 AS maven
+FROM maven:3.9.11-eclipse-temurin-17 AS maven
 
 WORKDIR /app
 
@@ -7,7 +7,7 @@ COPY ./src ./src
 
 RUN mvn clean install
 
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk
 
 COPY application.properties /app/application.properties
 COPY --from=maven /app/target/*-shaded.jar /app/jmelody.jar
