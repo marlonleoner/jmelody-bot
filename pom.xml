@@ -155,7 +155,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>me.leoner.jmelody.Main</mainClass>
+                            <mainClass>me.leoner.jmelody.JMelodyApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
