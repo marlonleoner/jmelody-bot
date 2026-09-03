@@ -2,7 +2,7 @@ package me.leoner.jmelody.config;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import me.leoner.jmelody.service.LoggerService;
+import me.leoner.jmelody.serviceold.LoggerService;
 
 import java.util.concurrent.Executors;
 

@@ -3,14 +3,16 @@ package me.leoner.jmelody.command.impl;
 import me.leoner.jmelody.command.CommandAbstract;
 import me.leoner.jmelody.command.CommandContext;
 import me.leoner.jmelody.exception.BaseException;
+import me.leoner.jmelody.service.LatencyMetricsService;
 
 public class PingCommand extends CommandAbstract {
 
     private static final String MESSAGE = """
             🏓 Pong!
             
-            Gateway: %d ms
-            Interaction: %d ms
+            WebSocket: %d ms
+            Message:   %d ms
+            Process:   %d ms
             """;
 
     public PingCommand() {
@@ -19,8 +21,14 @@ public class PingCommand extends CommandAbstract {
 
     @Override
     public void handle(CommandContext context) throws BaseException {
-        var latency = context.calculateLatency();
+        var processStart = System.nanoTime();
 
-        context.replyPrivate(MESSAGE.formatted(latency.gateway(), latency.interaction()));
+        var latency = LatencyMetricsService.calculate(context.event(), processStart);
+
+        context.replyPrivate(MESSAGE.formatted(
+                latency.websocket(),
+                latency.message(),
+                latency.process()
+        ));
     }
 }

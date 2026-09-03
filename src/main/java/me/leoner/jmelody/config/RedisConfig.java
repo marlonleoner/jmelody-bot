@@ -2,8 +2,8 @@ package me.leoner.jmelody.config;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import me.leoner.jmelody.service.LoggerService;
-import me.leoner.jmelody.service.RedisService;
+import me.leoner.jmelody.serviceold.LoggerService;
+import me.leoner.jmelody.serviceold.RedisService;
 import redis.clients.jedis.JedisPool;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
