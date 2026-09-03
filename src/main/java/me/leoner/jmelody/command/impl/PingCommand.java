@@ -6,12 +6,21 @@ import me.leoner.jmelody.exception.BaseException;
 
 public class PingCommand extends CommandAbstract {
 
+    private static final String MESSAGE = """
+            🏓 Pong!
+            
+            Gateway: %d ms
+            Interaction: %d ms
+            """;
+
     public PingCommand() {
         super("ping", "Check if server is running");
     }
 
     @Override
     public void handle(CommandContext context) throws BaseException {
-        context.replyPrivate("pong");
+        var latency = context.calculateLatency();
+
+        context.replyPrivate(MESSAGE.formatted(latency.gateway(), latency.interaction()));
     }
 }
