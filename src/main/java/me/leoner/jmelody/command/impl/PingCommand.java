@@ -21,9 +21,7 @@ public class PingCommand extends CommandAbstract {
 
     @Override
     public void handle(CommandContext context) throws BaseException {
-        var processStart = System.nanoTime();
-
-        var latency = LatencyMetricsService.calculate(context.event(), processStart);
+        var latency = LatencyMetricsService.calculate(context.event());
 
         context.replyPrivate(MESSAGE.formatted(
                 latency.websocket(),

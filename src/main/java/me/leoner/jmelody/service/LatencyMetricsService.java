@@ -10,14 +10,12 @@ import java.time.Instant;
 @NoArgsConstructor
 public class LatencyMetricsService {
 
-    public static LatencyMetrics calculate(final SlashCommandInteractionEvent event,
-                                           final long processStart) {
+    public static LatencyMetrics calculate(final SlashCommandInteractionEvent event) {
+        var processStart = System.nanoTime();
         var websocketLatency = event.getJDA().getGatewayPing();
-
         var messageLatency = Duration
-                .between(event.getTimeCreated(), Instant.now())
+                .between(Instant.now(), event.getTimeCreated().toInstant())
                 .toMillis();
-
         var processLatency = System.nanoTime() - processStart;
 
         return new LatencyMetrics(
