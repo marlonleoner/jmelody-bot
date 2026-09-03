@@ -13,7 +13,8 @@
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <start-class>me.leoner.jmelody.bot.Main</start-class>
+        <start-class>me.leoner.jmelody.JMelodyApplication</start-class>
+        <rabbit.version>5.34.0</rabbit.version>
         <jda.version>6.5.0</jda.version>
         <lava.player.version>2.2.7</lava.player.version>
         <lava.link.version>1.18.2</lava.link.version>
@@ -80,11 +81,11 @@
         </dependency>
 
         <!-- Windows x86_64 -->
-<!--        <dependency>-->
-<!--            <groupId>club.minnced</groupId>-->
-<!--            <artifactId>jdave-native-win-x86-64</artifactId>-->
-<!--            <version>0.1.8</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>club.minnced</groupId>-->
+        <!--            <artifactId>jdave-native-win-x86-64</artifactId>-->
+        <!--            <version>0.1.8</version>-->
+        <!--        </dependency>-->
 
         <!-- Miscellanious Dependencies -->
         <dependency>
@@ -111,6 +112,13 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>5.1.2</version>
+        </dependency>
+
+        <!-- RabbitMQ -->
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>${rabbit.version}</version>
         </dependency>
 
         <!-- JSoup HTML scrapping -->
@@ -147,7 +155,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>me.leoner.jmelody.bot.Main</mainClass>
+                            <mainClass>me.leoner.jmelody.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

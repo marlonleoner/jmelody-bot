@@ -30,6 +30,20 @@ services:
       - jmelody-network
 
 
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: jmelody-rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: jmelody
+      RABBITMQ_DEFAULT_PASS: de8b7c40f7ad40119237612be96a758f
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - jmelody-network
+
+
 networks:
   jmelody-network:
     driver: bridge

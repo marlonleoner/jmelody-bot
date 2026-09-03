@@ -1,0 +1,25 @@
+package me.leoner.jmelody.modal;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@AllArgsConstructor
+@Data
+public class TrackRequestContext {
+
+    private String query;
+
+    private TrackProviderEnum provider;
+
+    public String getFullQuery() {
+        if (provider.isSearch()) {
+            return provider.getPrefix().concat(query);
+        }
+
+        return query;
+    }
+
+    public boolean isSearch() {
+        return provider.isSearch();
+    }
+}
