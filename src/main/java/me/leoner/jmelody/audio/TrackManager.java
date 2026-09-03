@@ -7,8 +7,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import me.leoner.jmelody.exception.NothingPlayingException;
 import me.leoner.jmelody.manager.GuildPlayerManager;
-import me.leoner.jmelody.service.LoggerService;
-import me.leoner.jmelody.service.NowPlayingService;
+import me.leoner.jmelody.serviceold.LoggerService;
+import me.leoner.jmelody.serviceold.NowPlayingService;
 
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;

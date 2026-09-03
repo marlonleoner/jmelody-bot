@@ -1,6 +1,5 @@
 package me.leoner.jmelody.command;
 
-import me.leoner.jmelody.domain.LatencyMetrics;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -37,16 +36,5 @@ public record CommandContext(SlashCommandInteractionEvent event) {
 
     public void replyPublic(String message) {
         reply(message, ResponseVisibility.PUBLIC);
-    }
-
-    public LatencyMetrics calculateLatency() {
-        var gatewayLatency = event.getJDA().getGatewayPing();
-
-        var interactionLatency = System.currentTimeMillis() - (event.getTimeCreated().toEpochSecond() * 1000);
-
-        return new LatencyMetrics(
-                gatewayLatency,
-                interactionLatency
-        );
     }
 }

@@ -1,4 +1,4 @@
-package me.leoner.jmelody.service;
+package me.leoner.jmelody.serviceold;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;

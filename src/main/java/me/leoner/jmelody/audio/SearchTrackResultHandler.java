@@ -6,7 +6,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.BasicAudioPlaylist;
 import me.leoner.jmelody.modal.TrackRequestContext;
-import me.leoner.jmelody.service.LoggerService;
+import me.leoner.jmelody.serviceold.LoggerService;
 
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;

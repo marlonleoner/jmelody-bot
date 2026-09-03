@@ -7,7 +7,7 @@ import me.leoner.jmelody.command.CommandAbstract;
 import me.leoner.jmelody.command.CommandContext;
 import me.leoner.jmelody.rabbitmq.RabbitQueue;
 import me.leoner.jmelody.rabbitmq.dto.DeleteMessageEvent;
-import me.leoner.jmelody.service.ApplicationModules;
+import me.leoner.jmelody.serviceold.ApplicationModules;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;

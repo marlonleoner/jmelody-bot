@@ -8,7 +8,7 @@ import me.leoner.jmelody.rabbitmq.RabbitConfiguration;
 import me.leoner.jmelody.rabbitmq.RabbitModule;
 import me.leoner.jmelody.redis.RedisConfiguration;
 import me.leoner.jmelody.redis.RedisModule;
-import me.leoner.jmelody.service.ApplicationModules;
+import me.leoner.jmelody.serviceold.ApplicationModules;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;

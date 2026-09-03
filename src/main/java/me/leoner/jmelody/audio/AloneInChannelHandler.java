@@ -4,8 +4,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.leoner.jmelody.bot.JMelodyOld;
 import me.leoner.jmelody.config.ApplicationContext;
-import me.leoner.jmelody.service.LoggerService;
-import me.leoner.jmelody.service.RedisService;
+import me.leoner.jmelody.serviceold.LoggerService;
+import me.leoner.jmelody.serviceold.RedisService;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.List;

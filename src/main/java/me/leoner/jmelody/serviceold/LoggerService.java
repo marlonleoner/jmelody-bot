@@ -1,4 +1,4 @@
-package me.leoner.jmelody.service;
+package me.leoner.jmelody.serviceold;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
